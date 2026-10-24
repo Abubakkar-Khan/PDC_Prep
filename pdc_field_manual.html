@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDC Exam Guide</title>
+<style>
+:root{--bg:#f4f4f0;--paper:#fff;--ink:#171717;--muted:#6b6b65;--line:#d8d8d1;--red:#e33b2f;--soft:#eaeae4;--acc:#fbe3e0;--ok:#37805a;--mono:Consolas,"SFMono-Regular",monospace;--sans:Inter,Arial,Helvetica,sans-serif}
+body.dark{--bg:#121212;--paper:#1c1c1c;--ink:#ecece6;--muted:#a0a098;--line:#333;--soft:#262626;--acc:#4a2220}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6}
+button,input,select{font:inherit;color:inherit}button{cursor:pointer}
+.shell{display:grid;grid-template-columns:210px 1fr;min-height:100vh}
+.sidebar{border-right:1px solid var(--line);padding:22px 14px;position:sticky;top:0;height:100vh;background:var(--bg);z-index:30}
+.brand{font-weight:800;letter-spacing:-.04em;font-size:1.05rem;padding:0 8px 18px;border-bottom:1px solid var(--line);margin-bottom:14px}.brand small{display:block;font:.65rem var(--mono);color:var(--muted);font-weight:400;letter-spacing:.05em}
+.nav button{display:block;width:100%;text-align:left;border:0;background:none;padding:11px 10px;border-radius:4px;font-size:.95rem;color:var(--muted)}
+.nav button:hover{background:var(--soft)}.nav button.active{background:var(--ink);color:var(--bg);font-weight:700}
+.topbar{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,4vw,44px)}
+.topbar b{font:.75rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.btn{border:1px solid var(--line);background:var(--paper);padding:7px 12px;border-radius:4px;font-size:.85rem}.btn:hover{border-color:var(--ink)}.btn.pri{background:var(--ink);color:var(--bg);border-color:var(--ink)}.btn.on{background:var(--ink);color:var(--bg)}
+#menuBtn{display:none;margin-right:10px}
+.content{max-width:980px;margin:auto;padding:clamp(18px,4vw,44px)}
+.page{display:none}.page.active{display:block}
+h1{font-size:clamp(2rem,5vw,3.2rem);letter-spacing:-.06em;line-height:1.05;margin:0 0 12px}
+h2{font-size:1.6rem;letter-spacing:-.04em;margin:0 0 10px;scroll-margin-top:110px}
+h3{font-size:1.05rem;margin:22px 0 6px}
+p,li{color:var(--muted);max-width:78ch}li{margin:4px 0}
+.lead{font-size:1.08rem}
+.tag{display:inline-block;font:.65rem var(--mono);text-transform:uppercase;letter-spacing:.05em;background:var(--soft);padding:3px 7px;margin-left:6px;vertical-align:middle;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:20px 0}
+.card{background:var(--paper);border:1px solid var(--line);padding:18px;text-align:left;display:block;width:100%}
+button.card:hover{border-color:var(--red)}.card h3{margin:0 0 6px}.card p{margin:0}
+.topic{background:var(--paper);border:1px solid var(--line);padding:clamp(16px,3vw,28px);margin:0 0 18px}
+.chips{position:sticky;top:52px;z-index:15;background:var(--bg);padding:10px 0;display:flex;gap:6px;overflow-x:auto;border-bottom:1px solid var(--line);margin-bottom:18px}
+.chips button{white-space:nowrap;border:1px solid var(--line);background:var(--paper);border-radius:20px;padding:5px 12px;font-size:.82rem}.chips button:hover{border-color:var(--red)}
+.box{border-left:3px solid var(--red);background:var(--soft);padding:12px 16px;margin:14px 0;color:var(--ink);font-size:.93rem}.box b{display:block}
+.box.ok{border-color:var(--ok)}
+.tw{overflow-x:auto;margin:12px 0}table{border-collapse:collapse;width:100%;font-size:.88rem;background:var(--paper)}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top;color:var(--ink)}th{background:var(--soft);font:.72rem var(--mono);text-transform:uppercase}
+code,pre{font-family:var(--mono)}code{background:var(--soft);padding:1px 5px;font-size:.88em;color:var(--ink)}
+pre{background:#191919;color:#f3f3ec;padding:16px;overflow:auto;font-size:.82rem;line-height:1.6}pre code{background:none;color:inherit;padding:0}
+.fig{margin:14px 0;text-align:center}.fig svg{width:100%;height:auto;max-width:640px}.fig figcaption,.cap{font-size:.8rem;color:var(--muted);margin-top:4px}
+.figs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+svg text{fill:var(--ink);font:12px var(--sans)}svg rect{fill:var(--paper);stroke:var(--ink);stroke-width:1.2}svg rect.a{fill:var(--acc)}svg rect.g{fill:var(--soft);stroke:var(--muted)}svg rect.n{fill:none;stroke:none}
+svg line,svg path{stroke:var(--ink);stroke-width:1.3;fill:none}svg line.t{stroke-width:3}svg line.l{stroke:var(--muted);stroke-width:1}svg line.r{stroke:var(--red);stroke-width:2}svg circle{fill:var(--paper);stroke:var(--ink);stroke-width:1.3}svg circle.d{fill:var(--ink)}svg text.s{font-size:10px;fill:var(--muted)}
+.calc{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.calc label{display:block;font-size:.78rem;color:var(--muted);margin-top:8px}.calc input{width:100%;padding:8px;border:1px solid var(--line);background:var(--bg);margin-top:2px}
+.out{margin-top:12px;padding:10px 12px;background:var(--soft);font:.85rem var(--mono);white-space:pre-line;color:var(--ink)}
+.flash{background:var(--ink);color:var(--bg);padding:clamp(22px,5vw,44px);min-height:230px;cursor:pointer;display:flex;flex-direction:column;justify-content:center}.flash h2{margin:0}.flash p{color:var(--bg);opacity:.8}
+.opt{display:block;width:100%;text-align:left;padding:12px;border:1px solid var(--line);background:var(--paper);margin:8px 0}.opt:hover{border-color:var(--ink)}.opt.good{border-color:var(--ok);background:#e6f2ea;color:#111}.opt.bad{border-color:var(--red);background:#fde8e5;color:#111}
+.bar{height:5px;background:var(--line);margin:12px 0}.bar i{display:block;height:5px;background:var(--red);width:0}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+@media(max-width:860px){.shell{display:block}.sidebar{position:fixed;left:-230px;width:210px;transition:left .2s}.sidebar.open{left:0;box-shadow:8px 0 30px #0003}#menuBtn{display:inline-block}.grid,.calc,.figs{grid-template-columns:1fr}}
+@media print{.sidebar,.topbar,.chips{display:none}.shell{display:block}.page{display:block!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="sidebar" id="sidebar">
+  <div class="brand">PDC Exam Guide<small>CS-401 · Lectures 1–8</small></div>
+  <nav class="nav">
+    <button data-page="home" class="active">Home</button>
+    <button data-page="theory">1 · Theory</button>
+    <button data-page="numericals">2 · Numericals</button>
+    <button data-page="practice">3 · Practice</button>
+  </nav>
+</aside>
+<main>
+<header class="topbar"><div style="display:flex;align-items:center"><button class="btn" id="menuBtn" aria-label="Menu">☰</button><b id="crumb">Home</b></div><button class="btn" id="themeBtn" title="Dark mode">◐</button></header>
+<div class="content">
+
+<!-- HOME -->
+<section class="page active" id="page-home">
+<h1>Prepare for the PDC exam.</h1>
+<p class="lead">Revise the slides in two parts: theory (definitions, differences, examples) and numericals (formulas and solved examples).</p>
+<div class="grid">
+  <button class="card" data-go="theory"><h3>1 · Theory</h3><p>Parallel &amp; distributed computing, architectures, data hazards, cache coherence, networks, OpenMP, MPI. With diagrams.</p></button>
+  <button class="card" data-go="numericals"><h3>2 · Numericals</h3><p>Formula sheet, solved examples and calculators: speedup, networks, OpenMP, MPI, cache.</p></button>
+  <button class="card" data-go="practice"><h3>3 · Practice</h3><p>Flashcards for definitions. Quiz for concepts and calculations.</p></button>
+  <button class="card" id="goChecklist"><h3>Study plan</h3><p>Day 1: theory 1–4. Day 2: theory 5–8. Day 3: numericals. Day 4: practice and weak spots.</p></button>
+</div>
+<div class="box"><b>What to prepare</b>
+Theory: basic concepts of parallel and distributed computing, computer architectures, cache coherence, data hazards and parallel programming. Know definitions, differences, main concepts and class examples.<br><br>
+Numericals: practise formulas and examples on speedup, parallel networks, OpenMP and MPI from the slides.</div>
+<p class="cap">Topics marked <span class="tag">extra</span> are standard exam topics that are not in the uploaded slides (data hazards, speedup laws). Check them against your class notes.</p>
+</section>
+
+<!-- THEORY -->
+<section class="page" id="page-theory">
+<h1>Theory.</h1>
+<div class="chips" id="chips">
+  <button data-jump="t1">1 Basics</button><button data-jump="t2">2 Distributed</button><button data-jump="t3">3 Architectures</button><button data-jump="t4">4 Data hazards</button><button data-jump="t5">5 Memory &amp; cache</button><button data-jump="t6">6 Networks</button><button data-jump="t7">7 OpenMP</button><button data-jump="t8">8 MPI</button>
+</div>
+
+<article class="topic" id="t1"><h2>1 · Parallel and distributed computing</h2>
+<h3>Definitions</h3>
+<ul><li><b>Serial computing:</b> instructions run one after another on one processor.</li>
+<li><b>Parallel computing:</b> two or more processors, usually in one system, work at the same time on one problem.</li>
+<li><b>Distributed computing:</b> multiple computers, remote from each other, each have a role in one computation.</li>
+<li><b>Parallel programming:</b> writing programs that say which computations run in parallel.</li></ul>
+<h3>Difference</h3>
+<div class="tw"><table><thead><tr><th>Parallel</th><th>Distributed</th></tr></thead><tbody>
+<tr><td>Multiple processors run tasks at the same time</td><td>Networked computers coordinate by message passing</td></tr>
+<tr><td>Usually one system</td><td>Multiple systems</td></tr>
+<tr><td>Shared or distributed memory</td><td>Each computer has its own memory</td></tr>
+<tr><td>Goal: performance, scientific computing</td><td>Goal: resource sharing, scalability</td></tr>
+<tr><td>Single master clock</td><td>No global clock; synchronization algorithms</td></tr></tbody></table></div>
+<h3>Why parallel computing?</h3>
+<ul><li>Save time: many processors work together.</li><li>Solve larger problems than one CPU and memory can handle.</li><li>Provide concurrency (databases, search engines).</li><li>CPU speed grew about 1000× in 20 years; DRAM speed grew less than 4×. CPU 1–2 ns, cache about 10 ns, DRAM 50–60 ns.</li></ul>
+<div class="box"><b>Example from class</b>Y = (4×5) + (1×6) + (5×3). One processor: 4 steps. Three processors compute 20, 6, 15 at once, then add: 2 steps.</div>
+<h3>Shared vs distributed memory</h3>
+<div class="fig" data-fig="mem" data-cap="Left: threads share one address space (OpenMP). Right: each process has private memory and sends messages (MPI)."></div>
+<h3>Von Neumann architecture</h3>
+<p>Input, output, control unit, ALU, memory and external storage. The CPU uses instructions and data to perform operations.</p>
+</article>
+
+<article class="topic" id="t2"><h2>2 · Distributed systems</h2>
+<p>A distributed system is a set of independent computers that coordinate through message passing. The user sees one system or service.</p>
+<div class="tw"><table><thead><tr><th>Network</th><th>Distributed system</th></tr></thead><tbody>
+<tr><td>Connects computers and devices</td><td>Uses connected computers for coordinated work</td></tr>
+<tr><td>Focus: communication, protocols</td><td>Focus: common task or service</td></tr></tbody></table></div>
+<h3>Cluster vs grid vs cloud</h3>
+<div class="tw"><table><thead><tr><th></th><th>Cluster</th><th>Grid</th><th>Cloud</th></tr></thead><tbody>
+<tr><td>Location</td><td>One site, local network</td><td>Many sites</td><td>Provider data centres</td></tr>
+<tr><td>Hardware</td><td>Similar</td><td>Different</td><td>Hidden from user</td></tr>
+<tr><td>Coupling</td><td>Tight</td><td>Loose</td><td>Service based, pay for use</td></tr>
+<tr><td>Example</td><td>Lab / HPC cluster</td><td>Shared research resources</td><td>AWS, Google Cloud</td></tr></tbody></table></div>
+<h3>Characteristics and challenges</h3>
+<ul><li>Concurrency, message passing, resource sharing, no global clock, independent components.</li><li>Challenges: communication delay, coordination, failures, resource management.</li></ul>
+</article>
+
+<article class="topic" id="t3"><h2>3 · Computer architectures</h2>
+<h3>Levels of hardware parallelism</h3>
+<p>Multi-core (many processing elements in one chip). Multi-processor, clusters and grids (many whole computers on one task).</p>
+<h3>ILP and DLP</h3>
+<div class="tw"><table><thead><tr><th>ILP (instruction-level)</th><th>DLP (data-level)</th></tr></thead><tbody>
+<tr><td>Overlaps or reorders independent instructions in one stream</td><td>Same operation on many data items</td></tr>
+<tr><td>Example: 5-stage pipeline IF-ID-EX-MEM-WB (Pentium 4: 35 stages)</td><td>Example: A+B=C, array split in 4 chunks, one per core</td></tr>
+<tr><td>Result must not change</td><td>Used in image filters, weather, GPU shading</td></tr></tbody></table></div>
+<div class="fig" data-fig="pipe" data-cap="Pipeline: once full, one instruction finishes every clock cycle."></div>
+<h3>Flynn's taxonomy (1966)</h3>
+<div class="tw"><table><thead><tr><th>Class</th><th>Instruction streams</th><th>Data streams</th><th>Example</th></tr></thead><tbody>
+<tr><td>SISD</td><td>Single</td><td>Single</td><td>Von Neumann PC, single-CPU workstation</td></tr>
+<tr><td>SIMD</td><td>Single</td><td>Multiple</td><td>GPU, vector/array processors, AVX</td></tr>
+<tr><td>MISD</td><td>Multiple</td><td>Single</td><td>Rare; redundant fault-tolerant systems</td></tr>
+<tr><td>MIMD</td><td>Multiple</td><td>Multiple</td><td>Multicore CPUs, clusters, supercomputers</td></tr></tbody></table></div>
+<div class="fig" data-fig="flynn" data-cap="SIMD: one control unit drives many PEs in lock-step. MIMD: each PE has its own control unit and data."></div>
+<h3>CPU vs GPU</h3>
+<div class="tw"><table><thead><tr><th>CPU</th><th>GPU</th></tr></thead><tbody>
+<tr><td>Few powerful general-purpose cores</td><td>Many simple cores</td></tr>
+<tr><td>Varied control tasks, serial work</td><td>Data-parallel work, many similar operations</td></tr></tbody></table></div>
+<p>GPU programming: <b>CUDA</b> (NVIDIA) and <b>OpenCL</b> (portable). Uses: image processing, machine learning, video.</p>
+<h3>Process, thread, hybrid</h3>
+<ul><li><b>Process:</b> a running program with its own resources. <b>Thread:</b> an execution path inside a process; threads share memory.</li><li><b>Hybrid:</b> MPI between computers + OpenMP threads inside each computer.</li></ul>
+</article>
+
+<article class="topic" id="t4"><h2>4 · Data hazards <span class="tag">extra</span></h2>
+<p>A hazard stops the next instruction from running in its planned clock cycle in a pipeline. A <b>data hazard</b> happens when instructions depend on each other's data.</p>
+<div class="tw"><table><thead><tr><th>Type</th><th>Meaning</th><th>Example</th></tr></thead><tbody>
+<tr><td>RAW (true dependency)</td><td>Read After Write: I2 reads a value before I1 writes it</td><td>I1: ADD R1,R2,R3<br>I2: SUB R4,R1,R5</td></tr>
+<tr><td>WAR (anti-dependency)</td><td>Write After Read: I2 writes before I1 reads the old value</td><td>I1: ADD R4,R1,R2<br>I2: SUB R1,R5,R6</td></tr>
+<tr><td>WAW (output dependency)</td><td>Write After Write: writes finish in wrong order</td><td>I1: ADD R1,R2,R3<br>I2: SUB R1,R5,R6</td></tr></tbody></table></div>
+<p>In a simple in-order 5-stage pipeline, RAW is the common hazard. WAR and WAW appear with out-of-order execution.</p>
+<div class="fig" data-fig="hazard" data-cap="RAW hazard without forwarding: I2 waits 2 cycles (S = stall) until I1 writes R1."></div>
+<h3>Solutions</h3>
+<ul><li><b>Stall (bubble):</b> insert wait cycles. Simple but slow.</li><li><b>Forwarding (bypassing):</b> send the ALU result directly to the next instruction. Removes most RAW stalls. A load followed by a use still needs 1 stall.</li><li><b>Instruction reordering:</b> compiler moves independent instructions between the dependent pair.</li><li><b>Register renaming:</b> removes WAR and WAW (false dependencies).</li></ul>
+<div class="box"><b>Remember</b>Other hazard types: structural (two instructions need the same hardware) and control (branches).</div>
+</article>
+
+<article class="topic" id="t5"><h2>5 · Memory hierarchy and cache coherence</h2>
+<div class="fig" data-fig="pyramid" data-cap="Higher = faster, smaller, more expensive. The hierarchy lowers the average access time."></div>
+<h3>Cache terms</h3>
+<ul><li><b>Hit:</b> data is in cache. <b>Miss:</b> data is not in cache.</li><li>Hit ratio = hits / total accesses. Miss ratio = 1 − hit ratio.</li><li><b>AMAT</b> = hit time + miss ratio × miss penalty.</li><li><b>Temporal locality:</b> recently used data is used again (a loop variable). <b>Spatial locality:</b> nearby data is used next (array in order).</li></ul>
+<h3>Cache coherence</h3>
+<p>Keeps copies of the same memory location equal across caches. Without it a core can use an old value. Approaches: <b>snooping</b> (caches watch a shared bus) and <b>directory-based</b> (a directory records which caches hold a block).</p>
+<h3>MESI protocol</h3>
+<div class="tw"><table><thead><tr><th>State</th><th>Meaning</th><th>Equals memory?</th></tr></thead><tbody>
+<tr><td>M Modified</td><td>Only copy, changed</td><td>No</td></tr><tr><td>E Exclusive</td><td>Only copy, clean</td><td>Yes</td></tr>
+<tr><td>S Shared</td><td>Several clean copies</td><td>Yes</td></tr><tr><td>I Invalid</td><td>Not valid; must fetch again</td><td>-</td></tr></tbody></table></div>
+<p><b>Two-core example from class</b></p>
+<div class="tw"><table><thead><tr><th>Step</th><th>Action</th><th>Core 0</th><th>Core 1</th><th>x</th></tr></thead><tbody>
+<tr><td>1</td><td>Core 0 reads x</td><td>E</td><td>I</td><td>10</td></tr>
+<tr><td>2</td><td>Core 1 reads x</td><td>S</td><td>S</td><td>10</td></tr>
+<tr><td>3</td><td>Core 0 writes x=20</td><td>M</td><td>I</td><td>20 (in Core 0)</td></tr>
+<tr><td>4</td><td>Core 1 reads x</td><td>S</td><td>S</td><td>20</td></tr></tbody></table></div>
+<div class="fig" data-fig="mesi" data-cap="After step 3: Core 1's copy is invalid. Memory is stale until write-back."></div>
+<h3>Coherence vs consistency</h3>
+<div class="tw"><table><thead><tr><th>Cache coherence</th><th>Memory consistency</th></tr></thead><tbody>
+<tr><td>Copies of one memory location</td><td>Order and visibility of operations on different locations</td></tr>
+<tr><td>Hardware protocols such as MESI</td><td>Depends on architecture and programming model</td></tr></tbody></table></div>
+<p><b>Sequential consistency:</b> all memory operations appear in one global order that keeps each thread's program order.</p>
+<div class="box"><b>Class example</b>Initially x=0, y=0. T0: x=1; print(y). T1: y=1; print(x). Can both print 0? Under sequential consistency, no: that needs x=1 before print(y), print(y) before y=1, y=1 before print(x), print(x) before x=1. This is a cycle, so it is impossible. Weaker hardware can allow it.</div>
+<h3>Synchronization and false sharing</h3>
+<ul><li><b>Race condition:</b> result depends on thread timing (a shared counter: read, add, write).</li><li>Tools: mutex/lock, atomic, semaphore, barrier, memory fence.</li><li><b>False sharing:</b> different threads update different variables in the same cache line, so the line keeps bouncing. Fix: padding, per-thread data.</li></ul>
+</article>
+
+<article class="topic" id="t6"><h2>6 · Interconnection networks</h2>
+<p>An interconnection network carries data between processors and memory. It is made of <b>links</b> (wires, fibre), <b>switches</b> and <b>network interfaces</b>.</p>
+<div class="tw"><table><thead><tr><th>Static (direct)</th><th>Dynamic (indirect)</th></tr></thead><tbody>
+<tr><td>Point-to-point links between nodes</td><td>Switches and links connect inputs to outputs</td></tr>
+<tr><td>Examples: completely connected, star</td><td>Examples: bus, crossbar, Omega</td></tr></tbody></table></div>
+<ul><li><b>Degree of a switch</b> = total number of ports. Switch cost grows as the square of the degree.</li></ul>
+<div class="figs">
+<div class="fig" data-fig="bus" data-cap="Bus: O(1) distance, broadcast, but shared bandwidth is a bottleneck. Dozens of nodes at most."></div>
+<div class="fig" data-fig="cross" data-cap="Crossbar: p×m switches, non-blocking, cost O(p²)."></div>
+<div class="fig" data-fig="star" data-cap="Star: distance O(1), centre is a bottleneck. Static counterpart of a bus."></div>
+<div class="fig" data-fig="complete" data-cap="Completely connected: p(p−1)/2 links. Static counterpart of a crossbar."></div>
+</div>
+<h3>Omega network</h3>
+<p>A multistage network with log₂p stages of 2×2 switches and a perfect shuffle between stages. It has (p/2)·log₂p switches, cost O(p log p). It is a compromise between bus (cheap, slow) and crossbar (fast, costly). It can block.</p>
+<div class="fig" data-fig="omega" data-cap="8×8 Omega network: 3 stages, 12 switches."></div>
+<div class="box"><b>Routing</b>Let s and d be the binary source and destination. At each stage compare one bit (most significant first). Same bit: pass-through. Different bit: crossover. Example 010 → 111: cross, pass, cross. Blocking: 010→111 and 110→100 want the same link.</div>
+<h3>Comparison</h3>
+<div class="tw"><table><thead><tr><th>Network</th><th>Type</th><th>Cost</th><th>Limitation</th></tr></thead><tbody>
+<tr><td>Bus</td><td>Dynamic</td><td>Low</td><td>Shared bandwidth</td></tr>
+<tr><td>Crossbar</td><td>Dynamic</td><td>O(p²)</td><td>Cost does not scale</td></tr>
+<tr><td>Omega</td><td>Dynamic</td><td>O(p log p)</td><td>Blocking</td></tr>
+<tr><td>Completely connected</td><td>Static</td><td>p(p−1)/2 links</td><td>Too many links</td></tr>
+<tr><td>Star</td><td>Static</td><td>p−1 links</td><td>Central bottleneck, single point of failure</td></tr></tbody></table></div>
+</article>
+
+<article class="topic" id="t7"><h2>7 · OpenMP (shared memory)</h2>
+<p>OpenMP is an API for shared-memory parallel programming in C, C++ and Fortran. It uses compiler directives and threads.</p>
+<div class="fig" data-fig="fork" data-cap="Fork-join: the master thread forks a team at a parallel region. The team joins at the end."></div>
+<div class="tw"><table><thead><tr><th>Syntax</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>#pragma omp parallel</code></td><td>Create a parallel region (team of threads)</td></tr>
+<tr><td><code>#pragma omp parallel for</code></td><td>Split loop iterations among threads</td></tr>
+<tr><td><code>omp_get_thread_num()</code></td><td>ID of the calling thread</td></tr>
+<tr><td><code>omp_get_num_threads()</code></td><td>Number of threads in the team</td></tr>
+<tr><td><code>reduction(+:sum)</code></td><td>Each thread keeps a private sum; OpenMP adds them</td></tr>
+<tr><td><code>#pragma omp critical</code> / <code>atomic</code></td><td>One thread at a time updates shared data</td></tr></tbody></table></div>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;omp.h&gt;
+int main() {
+    int sum = 0;
+    #pragma omp parallel for reduction(+:sum)
+    for (int i = 1; i &lt;= 100; i++) sum += i;
+    printf("%d\n", sum);   // 5050
+}
+// compile: gcc -fopenmp sum.c -o sum   run: ./sum</code></pre>
+<div class="box"><b>Race condition</b>Two threads read the same old value of a shared counter and both write back. One update is lost. Fix: reduction, atomic, critical or lock.</div>
+<p>The class lab uses Google Colab: first parallel program, thread IDs, parallel sum.</p>
+</article>
+
+<article class="topic" id="t8"><h2>8 · MPI (message passing)</h2>
+<p>MPI (Message Passing Interface) is a standard for communication between parallel processes. Each process has private memory and exchanges data by messages. It runs on one computer or many.</p>
+<ul><li><b>Rank:</b> process ID inside a communicator (starts at 0, not an IP address). <b>Size:</b> number of processes. <b>Communicator:</b> group of processes; <code>MPI_COMM_WORLD</code> holds all.</li></ul>
+<div class="tw"><table><thead><tr><th>Function</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>MPI_Init()</code></td><td>Start MPI</td></tr><tr><td><code>MPI_Comm_rank()</code></td><td>Get my rank</td></tr><tr><td><code>MPI_Comm_size()</code></td><td>Get number of processes</td></tr>
+<tr><td><code>MPI_Send()</code></td><td>Send a message</td></tr><tr><td><code>MPI_Recv()</code></td><td>Receive a message</td></tr><tr><td><code>MPI_Finalize()</code></td><td>End MPI</td></tr></tbody></table></div>
+<p><code>MPI_Send(&amp;value, count, datatype, destination, tag, comm)</code><br><code>MPI_Recv(&amp;value, count, datatype, source, tag, comm, status)</code>. Tag, type and ranks must match.</p>
+<pre><code>MPI_Init(&amp;argc, &amp;argv);
+MPI_Comm_rank(MPI_COMM_WORLD, &amp;rank);
+if (rank == 0) { value = 100;
+    MPI_Send(&amp;value, 1, MPI_INT, 1, 0, MPI_COMM_WORLD); }
+else if (rank == 1) {
+    MPI_Recv(&amp;value, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    printf("Process 1: Received %d\n", value); }
+MPI_Finalize();
+// mpicc mpi_demo.c -o mpi_demo     mpirun -np 2 ./mpi_demo</code></pre>
+<h3>Collective operations</h3>
+<div class="tw"><table><thead><tr><th>Call</th><th>Meaning</th></tr></thead><tbody>
+<tr><td><code>MPI_Bcast</code></td><td>Same data from one process to all</td></tr><tr><td><code>MPI_Scatter</code></td><td>Split data, different part to each process</td></tr>
+<tr><td><code>MPI_Gather</code></td><td>Collect data from all at one process</td></tr><tr><td><code>MPI_Reduce</code></td><td>Combine values (e.g. MPI_SUM) at one process</td></tr></tbody></table></div>
+<div class="fig" data-fig="mpisum" data-cap="Parallel sum of 8 numbers with 4 processes: Scatter, local sums, Reduce."></div>
+<h3>Blocking, non-blocking, deadlock</h3>
+<ul><li><b>Blocking</b> (<code>MPI_Send/Recv</code>): the call returns when it is safe to continue. <b>Non-blocking</b> (<code>MPI_Isend/Irecv</code> + <code>MPI_Wait</code>): starts communication and returns; do not reuse the buffer before completion.</li><li>Synchronous / asynchronous describe sender-receiver coordination; blocking / non-blocking describe when the call returns.</li><li><b>Deadlock:</b> processes wait forever. Example: both processes call <code>MPI_Recv</code> first. Fix: reorder send and receive.</li></ul>
+<h3>OpenMP vs MPI</h3>
+<div class="tw"><table><thead><tr><th>OpenMP</th><th>MPI</th></tr></thead><tbody>
+<tr><td>Threads</td><td>Processes</td></tr><tr><td>Shared memory</td><td>Distributed memory</td></tr>
+<tr><td>Directives (<code>#pragma omp</code>)</td><td>Function calls (<code>MPI_Send</code>)</td></tr><tr><td>Usually one computer</td><td>One or many computers</td></tr></tbody></table></div>
+</article>
+</section>
+
+<!-- NUMERICALS -->
+<section class="page" id="page-numericals">
+<h1>Numericals.</h1>
+<p class="lead">Learn the formulas, read the solved examples, then check your own answers with the calculators.</p>
+<article class="topic"><h2>Formula sheet</h2>
+<div class="tw"><table><thead><tr><th>Topic</th><th>Formula</th></tr></thead><tbody>
+<tr><td>Speedup <span class="tag">extra</span></td><td>S = T₁ / Tₚ</td></tr>
+<tr><td>Efficiency <span class="tag">extra</span></td><td>E = S / p</td></tr>
+<tr><td>Amdahl's law <span class="tag">extra</span></td><td>S = 1 / (f + (1−f)/p), f = serial fraction; limit 1/f</td></tr>
+<tr><td>Pipeline time <span class="tag">extra</span></td><td>k stages, n instructions: k + n − 1 cycles (unpipelined: n·k)</td></tr>
+<tr><td>Hit / miss ratio</td><td>hits / total; 1 − hit ratio</td></tr>
+<tr><td>AMAT</td><td>hit time + miss ratio × miss penalty</td></tr>
+<tr><td>Crossbar</td><td>p×p switches = O(p²)</td></tr>
+<tr><td>Omega network</td><td>log₂p stages; (p/2)·log₂p switches</td></tr>
+<tr><td>Completely connected</td><td>p(p−1)/2 links</td></tr>
+<tr><td>Star</td><td>p−1 links (centre + p−1 nodes)</td></tr>
+<tr><td>Loop split (OpenMP static / MPI)</td><td>chunk = n / p; rank r gets r·chunk+1 … (r+1)·chunk</td></tr></tbody></table></div></article>
+
+<article class="topic"><h2>Solved examples</h2>
+<h3>1. Parallel steps (Lecture 1)</h3><p>Y = (4×5)+(1×6)+(5×3). Serial: 4 steps. 3 processors: multiply together (1 step), add (1 step) = 2 steps.</p>
+<h3>2. Speedup and efficiency</h3><p>T₁ = 100 s, Tₚ = 30 s, p = 4. S = 100/30 = 3.33. E = 3.33/4 = 83%.</p>
+<h3>3. Amdahl</h3><p>f = 0.1, p = 4. S = 1/(0.1 + 0.9/4) = 1/0.325 = 3.08. Even with infinite processors S ≤ 1/0.1 = 10.</p>
+<h3>4. Pipeline</h3><p>5 stages, 100 instructions. Pipelined: 5 + 100 − 1 = 104 cycles. Unpipelined: 500 cycles. Speedup = 500/104 = 4.81.</p>
+<h3>5. Cache (Lecture 8)</h3><p>900 hits in 1000 accesses: hit ratio 0.90, miss ratio 0.10. Hit time 2 ns, miss penalty 50 ns: AMAT = 2 + 0.10×50 = 7 ns.</p>
+<h3>6. Networks, p = 8</h3><p>Crossbar: 64 switches. Omega: 3 stages, 4×3 = 12 switches. Completely connected: 8·7/2 = 28 links. Star: 7 links.</p>
+<h3>7. Omega routing 010 → 111</h3><p>Bit 1: 0≠1 cross. Bit 2: 1=1 pass. Bit 3: 0≠1 cross.</p>
+<h3>8. OpenMP sum 1..100, 4 threads (static)</h3><p>25 iterations each. T0 (1–25) = 325, T1 (26–50) = 950, T2 (51–75) = 1575, T3 (76–100) = 2200. Reduction: 325+950+1575+2200 = 5050.</p>
+<h3>9. MPI sum of 8 numbers, 4 processes</h3><p>Scatter 2 each: (10,20), (30,40), (50,60), (70,80). Partial sums 30, 70, 110, 150. MPI_Reduce with MPI_SUM: 360 at rank 0.</p>
+<h3>10. MPI sum 1..1,000,000, 4 ranks (Lecture 7)</h3><p>Rank 0: 1–250,000 = 31,250,125,000. Rank 1: 250,001–500,000 = 93,750,125,000. Rank 2: 500,001–750,000 = 156,250,125,000. Rank 3: 750,001–1,000,000 = 218,750,125,000. Total = 500,000,500,000.</p>
+</article>
+
+<article class="topic"><h2>Calculators</h2>
+<div class="calc">
+<div class="card"><h3>Speedup &amp; Amdahl</h3><label>T₁<input type="number" id="s_t1" value="100"></label><label>Tₚ<input type="number" id="s_tp" value="30"></label><label>p<input type="number" id="s_p" value="4"></label><label>Serial fraction f<input type="number" step="0.01" id="s_f" value="0.1"></label><div class="out" id="o_s"></div></div>
+<div class="card"><h3>Cache AMAT</h3><label>Hits<input type="number" id="c_h" value="900"></label><label>Total accesses<input type="number" id="c_t" value="1000"></label><label>Hit time (ns)<input type="number" id="c_ht" value="2"></label><label>Miss penalty (ns)<input type="number" id="c_mp" value="50"></label><div class="out" id="o_c"></div></div>
+<div class="card"><h3>Network sizes</h3><label>Nodes p<input type="number" id="n_p" value="8"></label><div class="out" id="o_n"></div></div>
+<div class="card"><h3>Omega routing (p = 8)</h3><label>Source (0–7)<input type="number" id="r_s" value="2" min="0" max="7"></label><label>Destination (0–7)<input type="number" id="r_d" value="7" min="0" max="7"></label><div class="out" id="o_r"></div></div>
+<div class="card"><h3>Pipeline</h3><label>Stages k<input type="number" id="p_k" value="5"></label><label>Instructions n<input type="number" id="p_n" value="100"></label><div class="out" id="o_p"></div></div>
+<div class="card"><h3>Split sum 1..n (OpenMP / MPI)</h3><label>n<input type="number" id="x_n" value="100"></label><label>Threads / ranks p<input type="number" id="x_p" value="4"></label><div class="out" id="o_x"></div></div>
+</div></article>
+</section>
+
+<!-- PRACTICE -->
+<section class="page" id="page-practice">
+<h1>Practice.</h1>
+<div class="row"><button class="btn on" data-tab="flash">Flashcards</button><button class="btn" data-tab="quiz">Quiz</button></div>
+<div id="tab-flash">
+<p class="cap">Click the card or press Space to flip. Use ← → keys.</p>
+<div class="flash" id="flash" tabindex="0" role="button"><div id="fq"></div><div id="fa" style="display:none"></div></div>
+<div class="row"><button class="btn" id="fprev">← Prev</button><button class="btn pri" id="fflip">Flip</button><button class="btn" id="fnext">Next →</button><button class="btn" id="fshuf">Shuffle</button><span class="cap" id="fcount" style="align-self:center"></span></div>
+</div>
+<div id="tab-quiz" style="display:none">
+<div class="row"><b id="qprog"></b><span class="cap" style="align-self:center">Score: <span id="qscore">0</span></span></div>
+<div class="bar"><i id="qbar"></i></div><div id="qbox"></div>
+</div>
+</section>
+
+</div></main></div>
+<script>
+const $=id=>document.getElementById(id);
+/* ---------- navigation ---------- */
+const titles={home:'Home',theory:'1 · Theory',numericals:'2 · Numericals',practice:'3 · Practice'};
+function go(p){if(!titles[p])p='home';document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id==='page-'+p));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===p));$('crumb').textContent=titles[p];$('sidebar').classList.remove('open');window.scrollTo(0,0);if(location.hash!=='#'+p)history.replaceState(null,'','#'+p)}
+document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>go(b.dataset.page));
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+$('goChecklist').onclick=()=>go('theory');
+$('menuBtn').onclick=()=>$('sidebar').classList.toggle('open');
+document.querySelectorAll('[data-jump]').forEach(b=>b.onclick=()=>$(b.dataset.jump).scrollIntoView());
+$('themeBtn').onclick=()=>{document.body.classList.toggle('dark');localStorage.setItem('pdc-dark',document.body.classList.contains('dark')?'1':'')};
+if(localStorage.getItem('pdc-dark'))document.body.classList.add('dark');
+
+/* ---------- SVG helpers ---------- */
+const sv=(w,h,s)=>`<svg viewBox="0 0 ${w} ${h}" role="img">${s}</svg>`;
+const bx=(x,y,w,h,t,c='')=>`<rect class="${c}" x="${x}" y="${y}" width="${w}" height="${h}" rx="3"/><text x="${x+w/2}" y="${y+h/2+4}" text-anchor="middle">${t}</text>`;
+const ln=(a,b,c,d,k='')=>`<line class="${k}" x1="${a}" y1="${b}" x2="${c}" y2="${d}"/>`;
+const tx=(x,y,t,a='middle',k='')=>`<text class="${k}" x="${x}" y="${y}" text-anchor="${a}">${t}</text>`;
+function pipe(rows){const W=40,H=24,L=130;let max=0,s='';rows.forEach((r,i)=>{const y=30+i*30;s+=tx(L-8,y+16,r.l,'end');let c=r.s;['IF','ID','EX','MEM','WB'].forEach(st=>{s+=bx(L+c*W,y,W-3,H,st,r.hl&&st==='EX'?'a':'');c++;if(st==='ID'&&r.st){for(let k=0;k<r.st;k++){s+=bx(L+c*W,y,W-3,H,'S','g');c++}}});max=Math.max(max,c)});for(let c=0;c<max;c++)s+=tx(L+c*W+W/2-1,18,c+1,'middle','s');return sv(L+max*W+10,40+rows.length*30,s)}
+const F={
+mem:()=>{let s=tx(120,16,'Shared memory (OpenMP)')+tx(480,16,'Distributed memory (MPI)');[0,1,2].forEach(i=>{s+=bx(25+i*75,30,60,28,'CPU')+ln(55+i*75,58,55+i*75,110)});s+=bx(15,110,230,32,'Shared memory','a');[0,1,2].forEach(i=>{const x=340+i*100;s+=bx(x,30,70,26,'CPU')+bx(x,64,70,26,'Mem','a')+ln(x+35,90,x+35,140)});s+=ln(330,140,640,140,'t')+tx(485,160,'Network (messages)');return sv(640,175,s)},
+pipe:()=>pipe([{l:'Instr 1',s:0},{l:'Instr 2',s:1},{l:'Instr 3',s:2}]),
+hazard:()=>pipe([{l:'I1: ADD R1,R2,R3',s:0},{l:'I2: SUB R4,R1,R5',s:1,st:2,hl:1}]),
+flynn:()=>{let s=tx(150,16,'SIMD')+bx(10,80,60,40,'CU','a');for(let i=0;i<4;i++){const y=26+i*44;s+=ln(70,100,120,y+16)+bx(120,y,60,32,'PE'+(i+1))+ln(180,y+16,220,y+16)+bx(220,y,50,32,'M'+(i+1))}
+s+=tx(470,16,'MIMD');for(let i=0;i<3;i++){const y=30+i*55;s+=bx(340,y,50,34,'CU'+(i+1),'a')+ln(390,y+17,420,y+17)+bx(420,y,60,34,'PE'+(i+1))+ln(480,y+17,520,y+17)+bx(520,y,50,34,'M'+(i+1))}return sv(640,205,s)},
+pyramid:()=>{const L=[['Registers',130,'~1 ns'],['Cache',210,'~10 ns'],['RAM (DRAM)',300,'50–60 ns'],['Secondary storage',400,'slowest']];let s='';L.forEach((r,i)=>{const y=10+i*46;s+=bx(260-r[1]/2,y,r[1],38,r[0],i===1?'a':'')+tx(480,y+23,r[2],'start')});s+=tx(60,30,'fastest','middle','s')+tx(60,170,'largest','middle','s');return sv(640,200,s)},
+mesi:()=>{let s=bx(40,20,120,28,'Core 0')+bx(40,58,120,34,'x = 20   [M]','a')+bx(240,20,120,28,'Core 1')+bx(240,58,120,34,'x = 10   [I]','g')+ln(100,92,100,130)+ln(300,92,300,130)+ln(60,130,340,130,'t')+ln(200,130,200,150)+bx(130,150,140,30,'Memory x = 10');return sv(400,195,s)},
+fork:()=>{let s=tx(60,40,'Master','middle','s')+ln(20,100,140,100,'t');[0,1,2,3].forEach(i=>{const y=40+i*40;s+=ln(140,100,170,y)+bx(170,y-12,170,24,'Thread '+i,'a')+ln(340,y,370,100)});s+=ln(370,100,520,100,'t')+tx(155,20,'fork','middle','s')+tx(355,20,'join (barrier)','middle','s')+tx(255,196,'parallel region','middle','s')+tx(450,90,'master continues','middle','s');return sv(540,205,s)},
+mpisum:()=>{let s=bx(120,8,400,28,'Rank 0 data: 10 20 30 40 50 60 70 80','a')+tx(320,56,'MPI_Scatter','middle','s');const d=[['10 20',30],['30 40',70],['50 60',110],['70 80',150]];d.forEach((r,i)=>{const x=40+i*150;s+=ln(320,38,x+50,66)+bx(x,66,100,26,'Rank '+i+': '+r[0])+bx(x,104,100,26,'sum = '+r[1],'g')+ln(x+50,92,x+50,104)+ln(x+50,130,320,162)});s+=tx(320,150,'MPI_Reduce (MPI_SUM)','middle','s')+bx(250,166,140,28,'Rank 0: total = 360','a');return sv(640,205,s)},
+bus:()=>{let s='';for(let i=0;i<6;i++){const x=15+i*100;s+=bx(x,15,60,28,'P'+i)+ln(x+30,43,x+30,95)}s+=ln(10,95,625,95,'t')+tx(320,120,'Shared bus');return sv(640,130,s)},
+cross:()=>{let s='';for(let i=0;i<4;i++){const y=40+i*36,x=100+i*50;s+=tx(40,y+4,'P'+i)+ln(60,y,280,y)+tx(x,22,'M'+i)+ln(x,28,x,160)}for(let i=0;i<4;i++)for(let j=0;j<4;j++)s+=`<circle class="d" cx="${100+j*50}" cy="${40+i*36}" r="4"/>`;return sv(320,175,s)},
+star:()=>{let s='';for(let i=0;i<8;i++){const a=i*Math.PI/4,x=160+85*Math.cos(a),y=100+75*Math.sin(a);s+=ln(160,100,x,y)+`<circle cx="${x}" cy="${y}" r="13"/>`+tx(x,y+4,i+1)}s+=`<circle class="d" cx="160" cy="100" r="14"/>`;return sv(320,200,s)},
+complete:()=>{let P=[];for(let i=0;i<8;i++){const a=i*Math.PI/4;P.push([160+78*Math.cos(a),100+78*Math.sin(a)])}let s='';for(let i=0;i<8;i++)for(let j=i+1;j<8;j++)s+=ln(P[i][0],P[i][1],P[j][0],P[j][1],'l');P.forEach((p,i)=>s+=`<circle cx="${p[0]}" cy="${p[1]}" r="12"/>`+tx(p[0],p[1]+4,i));return sv(320,200,s)},
+omega:()=>{const sh=i=>i<4?2*i:2*i+1-8,y=i=>30+i*34,X=[150,300,450];let s='';const b=i=>i.toString(2).padStart(3,'0');for(let i=0;i<8;i++){s+=tx(30,y(i)+4,b(i))+ln(55,y(i),X[0],y(sh(i)),'l')+tx(530,y(i)+4,b(i),'start')+ln(X[2]+40,y(i),520,y(i),'l')}
+for(let st=0;st<2;st++)for(let i=0;i<8;i++)s+=ln(X[st]+40,y(i),X[st+1],y(sh(i)),'l');
+for(let st=0;st<3;st++){for(let k=0;k<4;k++)s+=`<rect class="a" x="${X[st]}" y="${y(2*k)-12}" width="40" height="58" rx="3"/><text x="${X[st]+20}" y="${y(2*k)+21}" text-anchor="middle">2×2</text>`;s+=tx(X[st]+20,14,'Stage '+(st+1),'middle','s')}return sv(580,300,s)}
+};
+document.querySelectorAll('.fig').forEach(f=>{const fn=F[f.dataset.fig];if(fn)f.innerHTML=fn()+`<figcaption>${f.dataset.cap||''}</figcaption>`});
+
+/* ---------- calculators ---------- */
+const nv=i=>parseFloat($(i).value)||0,r3=x=>Number.isFinite(x)?Math.round(x*1000)/1000:'n/a';
+function calc(){
+const t1=nv('s_t1'),tp=nv('s_tp'),p=nv('s_p'),f=nv('s_f'),S=t1/tp;
+$('o_s').textContent=`Speedup S = ${r3(S)}\nEfficiency E = ${r3(S/p*100)}%\nAmdahl S = ${r3(1/(f+(1-f)/p))}\nAmdahl limit = ${f?r3(1/f):'infinite'}`;
+const h=nv('c_h'),t=nv('c_t'),hr=t?h/t:0;
+$('o_c').textContent=`Hit ratio = ${r3(hr*100)}%\nMiss ratio = ${r3((1-hr)*100)}%\nAMAT = ${r3(nv('c_ht')+(1-hr)*nv('c_mp'))} ns`;
+const n=nv('n_p'),lg=Math.log2(n);
+$('o_n').textContent=`Crossbar switches = ${r3(n*n)}\nOmega stages = ${r3(lg)}${Number.isInteger(lg)?'':' (p should be power of 2)'}\nOmega switches = ${r3(n/2*lg)}\nComplete links = ${r3(n*(n-1)/2)}\nStar links = ${r3(n-1)}`;
+const s=Math.max(0,Math.min(7,Math.floor(nv('r_s')))),d=Math.max(0,Math.min(7,Math.floor(nv('r_d')))),sb=s.toString(2).padStart(3,'0'),db=d.toString(2).padStart(3,'0');
+let rt=`${sb} -> ${db}\n`;for(let i=0;i<3;i++)rt+=`Stage ${i+1}: ${sb[i]} vs ${db[i]} = ${sb[i]===db[i]?'pass-through':'crossover'}\n`;$('o_r').textContent=rt;
+const k=nv('p_k'),m=nv('p_n');$('o_p').textContent=`Pipelined = ${k+m-1} cycles\nUnpipelined = ${k*m} cycles\nSpeedup = ${r3(k*m/(k+m-1))}`;
+const N=Math.floor(nv('x_n')),P=Math.max(1,Math.floor(nv('x_p')));let o='',tot=0;const ch=Math.floor(N/P);
+for(let r=0;r<P;r++){const a=r*ch+1,b=r===P-1?N:(r+1)*ch,ps=(a+b)*(b-a+1)/2;tot+=ps;o+=`Rank/Thread ${r}: ${a}..${b} = ${ps}\n`}
+$('o_x').textContent=o+`Total = ${tot}`}
+document.querySelectorAll('.calc input').forEach(i=>i.oninput=calc);calc();
+
+/* ---------- practice ---------- */
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('on',x===b));$('tab-flash').style.display=b.dataset.tab==='flash'?'block':'none';$('tab-quiz').style.display=b.dataset.tab==='quiz'?'block':'none'});
+const cards=[
+["Parallel computing","Two or more processors, usually in one system, work at the same time on one problem."],
+["Distributed computing","Multiple remote computers each have a role in one computation. They coordinate by message passing."],
+["Parallel vs distributed","Parallel: one system, shared or distributed memory, single clock, for performance. Distributed: many systems, own memory, no global clock, for sharing and scalability."],
+["Cluster, grid, cloud","Cluster: similar computers, local network, tight. Grid: different computers at many sites, loose. Cloud: resources as a pay-for-use service."],
+["ILP vs DLP","ILP overlaps independent instructions in one stream (pipeline). DLP applies the same operation to many data items."],
+["Five pipeline stages","IF, ID, EX, MEM, WB."],
+["SISD / SIMD / MISD / MIMD","Single or multiple Instruction stream x Single or multiple Data stream. Examples: PC / GPU / rare / multicore and clusters."],
+["Data hazard types","RAW (true), WAR (anti), WAW (output)."],
+["Fixes for RAW hazard","Stall, forwarding, instruction reordering. Register renaming removes WAR and WAW."],
+["CPU vs GPU","CPU: few general-purpose cores. GPU: many simple cores for data-parallel work. CUDA (NVIDIA), OpenCL."],
+["Process vs thread","Process: program with own resources. Thread: execution path inside a process; threads share memory."],
+["Hybrid programming","MPI between computers plus OpenMP threads inside each computer."],
+["Hit ratio, miss ratio, AMAT","hits/total; 1 - hit ratio; hit time + miss ratio x miss penalty."],
+["Temporal vs spatial locality","Temporal: reuse recent data (loop variable). Spatial: use nearby data (array in order)."],
+["Cache coherence","Keeps copies of one memory location equal in all caches. Snooping or directory based."],
+["MESI","Modified (changed, only copy), Exclusive (only copy, clean), Shared (several clean copies), Invalid (not usable)."],
+["Coherence vs consistency","Coherence: copies of one location. Consistency: order and visibility of operations across locations."],
+["Sequential consistency","One global order of all operations that keeps each thread's program order."],
+["False sharing","Different variables in one cache line cause constant invalidation. Fix: padding, per-thread data."],
+["Static vs dynamic network","Static (direct): point-to-point links, e.g. star, complete. Dynamic (indirect): switches, e.g. bus, crossbar, Omega."],
+["Crossbar / Omega / complete","O(p^2) switches / (p/2)log2 p switches, log2 p stages, blocking / p(p-1)/2 links."],
+["Bus and star problem","Bus: shared bandwidth. Star: central node bottleneck and single point of failure."],
+["OpenMP fork-join","Master thread forks a team at a parallel region; threads join at the end; master continues."],
+["reduction(+:sum)","Each thread keeps a private partial sum. OpenMP adds them at the end. Avoids a race condition."],
+["Race condition","Result depends on timing of threads on shared data. Use atomic, critical, lock or reduction."],
+["MPI rank, size, communicator","Rank: process ID (from 0). Size: number of processes. Communicator: group; MPI_COMM_WORLD has all."],
+["Scatter, Gather, Bcast, Reduce","Scatter: split parts. Gather: collect. Bcast: same to all. Reduce: combine with an operation."],
+["Blocking vs non-blocking","Blocking waits until safe to continue. Non-blocking (Isend/Irecv + Wait) returns at once."],
+["Deadlock","Processes wait forever, e.g. both call MPI_Recv first. Reorder send and receive."],
+["OpenMP vs MPI","OpenMP: threads, shared memory, directives. MPI: processes, distributed memory, messages."]
+];
+let deck=cards.slice(),fi=0,flip=false;
+function drawF(){const c=deck[fi];$('fq').innerHTML=`<p>Question</p><h2>${c[0]}</h2>`;$('fa').innerHTML=`<p>Answer</p><h2 style="font-size:1.25rem;line-height:1.5">${c[1]}</h2>`;$('fq').style.display=flip?'none':'block';$('fa').style.display=flip?'block':'none';$('fcount').textContent=`${fi+1} / ${deck.length}`}
+function flipF(){flip=!flip;drawF()}
+$('flash').onclick=flipF;$('fflip').onclick=flipF;$('fprev').onclick=()=>{fi=(fi-1+deck.length)%deck.length;flip=false;drawF()};$('fnext').onclick=()=>{fi=(fi+1)%deck.length;flip=false;drawF()};$('fshuf').onclick=()=>{deck.sort(()=>Math.random()-.5);fi=0;flip=false;drawF()};drawF();
+const quiz=[
+{q:"Which model uses threads that share an address space?",o:["MPI","OpenMP","Grid","Crossbar"],a:1,e:"OpenMP is shared memory."},
+{q:"SIMD stands for:",o:["Single Instruction, Multiple Data","Shared Instruction, Multiple Data","Single Input, Multiple Devices","Serial Instruction, Mixed Data"],a:0,e:"One instruction stream, many data streams."},
+{q:"A GPU is best described as:",o:["SISD","SIMD","MISD","Distributed"],a:1,e:"Same shader instruction on thousands of pixels."},
+{q:"Which hazard is a true dependency?",o:["WAR","WAW","RAW","Structural"],a:2,e:"Read After Write: I2 needs the value I1 produces."},
+{q:"Forwarding is used to reduce:",o:["Cache misses","RAW stalls","Deadlock","Bus traffic"],a:1,e:"ALU result is sent directly to the next instruction."},
+{q:"5-stage pipeline, 100 instructions. How many cycles?",o:["500","104","105","100"],a:1,e:"k + n - 1 = 5 + 100 - 1 = 104."},
+{q:"T1 = 100 s, Tp = 25 s, p = 8. Efficiency?",o:["50%","4%","12.5%","80%"],a:0,e:"S = 4, E = 4/8 = 50%."},
+{q:"Amdahl: f = 0.5. Maximum speedup with infinite processors?",o:["1","2","5","Infinite"],a:1,e:"1/f = 2."},
+{q:"Hit time 2 ns, miss ratio 0.10, penalty 50 ns. AMAT?",o:["5 ns","7 ns","52 ns","10 ns"],a:1,e:"2 + 0.10 x 50 = 7 ns."},
+{q:"Which MESI state is a single clean copy?",o:["Modified","Exclusive","Shared","Invalid"],a:1,e:"Exclusive: only copy and equals memory."},
+{q:"Core 0 writes a line that Core 1 also holds (Shared). Core 1's copy becomes:",o:["Modified","Exclusive","Shared","Invalid"],a:3,e:"Coherence invalidates other copies."},
+{q:"Cache coherence concerns:",o:["Order of operations across locations","Copies of one memory location","Network routing","Thread creation"],a:1,e:"Ordering across locations is memory consistency."},
+{q:"Links in a completely connected network of 8 nodes:",o:["8","16","28","56"],a:2,e:"8 x 7 / 2 = 28."},
+{q:"Stages and switches in an 8x8 Omega network:",o:["3 stages, 12 switches","8 stages, 64 switches","3 stages, 24 switches","4 stages, 16 switches"],a:0,e:"log2 8 = 3 stages, (8/2) x 3 = 12 switches."},
+{q:"Omega routing 010 to 111. Switch settings (stage 1,2,3)?",o:["pass, pass, pass","cross, pass, cross","cross, cross, cross","pass, cross, pass"],a:1,e:"Compare bits: 0/1 cross, 1/1 pass, 0/1 cross."},
+{q:"Which network has a central bottleneck?",o:["Star","Crossbar","Omega","Completely connected"],a:0,e:"All traffic goes through the centre node."},
+{q:"OpenMP loop 1..100, 4 threads, static. Thread 2 handles:",o:["26-50","51-75","76-100","1-25"],a:1,e:"Thread 0: 1-25, 1: 26-50, 2: 51-75, 3: 76-100."},
+{q:"Why use reduction(+:sum)?",o:["Start MPI","Avoid a race on sum","Get thread ID","Create a barrier"],a:1,e:"Each thread uses a private partial sum, combined at the end."},
+{q:"MPI scatter of 10..80 to 4 processes, then Reduce with MPI_SUM gives:",o:["260","300","360","420"],a:2,e:"30 + 70 + 110 + 150 = 360."},
+{q:"Which sends different parts of an array to each process?",o:["MPI_Bcast","MPI_Scatter","MPI_Gather","MPI_Reduce"],a:1,e:"Scatter splits data; Bcast sends the same data."},
+{q:"Two processes both call MPI_Recv first. This is:",o:["Race condition","False sharing","Deadlock","Broadcast"],a:2,e:"Nobody sends, so nobody continues."},
+{q:"Which is spatial locality?",o:["Reusing a loop counter","Reading array elements in order","Waiting for a message","Using many threads"],a:1,e:"Nearby data is used next."}
+];
+let qi=0,qs=0,done=false,missed=[];
+function drawQ(){done=false;$('qscore').textContent=qs;$('qbar').style.width=(qi/quiz.length*100)+'%';
+if(qi>=quiz.length){$('qprog').textContent='Done';$('qbox').innerHTML=`<div class="card"><h2>${qs} / ${quiz.length}</h2>${missed.length?'<h3>Review these</h3>'+missed.map(m=>`<div class="box"><b>${m.q}</b>Answer: ${m.o[m.a]}. ${m.e}</div>`).join(''):'<p>Perfect score.</p>'}<button class="btn pri" id="qagain">Try again</button></div>`;$('qagain').onclick=resetQ;return}
+const q=quiz[qi];$('qprog').textContent=`Question ${qi+1} / ${quiz.length}`;
+$('qbox').innerHTML=`<h3 style="font-size:1.2rem">${q.q}</h3>`+q.o.map((o,i)=>`<button class="opt" data-i="${i}">${i+1}. ${o}</button>`).join('')+'<div id="qfb"></div><button class="btn pri" id="qnext" style="display:none">Next →</button>';
+document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(done)return;done=true;const c=+b.dataset.i;if(c===q.a)qs++;else{missed.push(q);b.classList.add('bad')}document.querySelectorAll('.opt').forEach(x=>{if(+x.dataset.i===q.a)x.classList.add('good')});$('qscore').textContent=qs;$('qfb').innerHTML=`<div class="box ${c===q.a?'ok':''}"><b>${c===q.a?'Correct':'Not quite'}</b>${q.e}</div>`;$('qnext').style.display='inline-block'});
+$('qbox').addEventListener('click',()=>{},{once:true});const nx=$('qnext');nx.onclick=()=>{qi++;drawQ()}}
+function resetQ(){qi=0;qs=0;missed=[];quiz.sort(()=>Math.random()-.5);drawQ()}drawQ();
+document.addEventListener('keydown',e=>{if(/INPUT/.test(e.target.tagName))return;const pr=$('page-practice').classList.contains('active');if(!pr)return;
+if($('tab-flash').style.display!=='none'){if(e.key==='ArrowRight')$('fnext').click();if(e.key==='ArrowLeft')$('fprev').click();if(e.key===' '){e.preventDefault();flipF()}}
+else{if(/^[1-4]$/.test(e.key)){const o=document.querySelector(`.opt[data-i="${e.key-1}"]`);if(o)o.click()}if(e.key==='Enter'){const n=$('qnext');if(n&&n.style.display!=='none')n.click()}}});
+go(location.hash.slice(1)||'home');
+</script>
+</body>
+</html>
