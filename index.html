@@ -122,7 +122,11 @@ Numericals: practise formulas and examples on speedup, parallel networks, OpenMP
 <tr><td>Resource requirements</td><td>Wall-clock time falls but CPU time rises: 1 hour on 8 processors = 8 CPU-hours. Memory use can be higher (replicated data, library overhead).</td></tr>
 <tr><td>Overhead</td><td>For short programs, setup, task creation, communication and termination can make parallel code slower than serial.</td></tr></tbody></table></div>
 <h3>Performance: FLOPS and Amdahl</h3>
-<p><b>FLOPS</b> (floating-point operations per second) measures computing power (theoretical peak). Example from class: IBM Summit, USA, 4,611,236 cores (9,216 POWER9 CPUs + 27,648 NVIDIA V100 GPUs), 122.3 PFLOPS. <b>Amdahl's law</b> gives the maximum speedup when only part of a program is parallelized (see Numericals).</p></article>
+<p><b>FLOPS</b> (floating-point operations per second) measures computing power (theoretical peak). Example from class: IBM Summit, USA, 4,611,236 cores (9,216 POWER9 CPUs + 27,648 NVIDIA V100 GPUs), 122.3 PFLOPS. <b>Amdahl's law</b>: Speedup = 1/((1−P)+P/N) (see Numericals). <b>FLOPS</b> = sockets × cores/socket × cycles/s × FLOPs/cycle.</p><h3>Parallel terminology (Lecture 4)</h3>
+<ul><li><b>Supercomputing / HPC:</b> using the world's fastest and largest computers to solve large problems.</li><li><b>Node:</b> a standalone "computer in a box": multiple CPUs/cores, memory, network interfaces. Nodes are networked to form a supercomputer.</li><li><b>CPU / socket / processor / core:</b> a CPU was once one execution unit. Then several CPUs went into a node. Then each CPU was split into cores (unique execution units). A multi-core CPU is a "socket". Result: a node with multiple CPUs, each with multiple cores. Servers can have more than one socket; home computers have 1. Cores per socket: 2 (dual), 4 (quad), 6 (hexa), 8, prototypes up to 80.</li><li>Clock rate: 2 GHz = 2,000,000,000 cycles per second.</li></ul>
+<div class="box"><b>Von Neumann and the speed gap</b>Von Neumann machine: input devices, output devices, CPU (control unit + ALU), memory, external storage. Over time CPU speed outpaced RAM speed, and disk is slowest. This is why caches are needed (CPU 1–2 ns, cache 10 ns, DRAM 50–60 ns).</div>
+<h3>Serial vs parallel execution</h3>
+<p>Serial: the problem becomes a stream of instructions executed one at a time on one processor (example: do_payroll() handles emp1, emp2, emp3 in order). Parallel: the problem is divided into parts; each part is a stream of instructions on its own processor (do_payroll(emp1) … do_payroll(empN) at the same time). Parallel computing needs an overall control/coordination mechanism.</p></article>
 
 <article class="topic" id="t2"><h2>2 · Distributed systems</h2>
 <p>A distributed system is a set of independent computers that coordinate through message passing. The user sees one system or service.</p>
@@ -139,7 +143,45 @@ Numericals: practise formulas and examples on speedup, parallel networks, OpenMP
 <tr><td>Example</td><td>Lab / HPC cluster</td><td>Online gaming; special software assigns subtasks</td><td>AWS, Google App Engine, Dropbox, Gmail, YouTube</td></tr></tbody></table></div>
 <h3>Characteristics and challenges</h3>
 <ul><li>Concurrency, message passing, resource sharing, no global clock, independent components.</li><li>Challenges: communication delay, coordination, failures, resource management.</li></ul>
-</article>
+<h3>Definitions from the slides</h3>
+<ul><li><b>Coulouris:</b> a system in which hardware or software components located at networked computers communicate and coordinate their actions only by message passing.</li><li><b>Tanenbaum:</b> a collection of independent computers that appear to the users as a single computer.</li><li><b>Cluster (Buyya):</b> a parallel or distributed system of interconnected stand-alone computers working together as a single, integrated computing resource.</li><li><b>Cloud (Buyya):</b> a parallel and distributed system of interconnected, virtualised computers that are dynamically provisioned and presented as one or more unified resources, based on service-level agreements negotiated between provider and consumers. Cloud = virtualization pool of resources.</li><li><b>Grid:</b> resources from multiple locations toward a common goal.</li></ul>
+<h3>Networks vs distributed systems</h3>
+<div class="tw"><table><thead><tr><th>Network</th><th>Distributed system</th></tr></thead><tbody>
+<tr><td>Media for interconnecting local and wide area computers and exchanging messages by protocols</td><td>Existence of multiple autonomous computers is transparent</td></tr>
+<tr><td>Entities are visible and explicitly addressed (IP address)</td><td>User sees one system</td></tr>
+<tr><td>Focus on packets, routing</td><td>Focus on applications</td></tr></tbody></table></div>
+<p>Both share problems (openness, reliability) at different levels. Every distributed system relies on services provided by a computer network.</p>
+<h3>Characteristics</h3>
+<ul><li><b>Parallel activities:</b> autonomous components execute concurrent tasks.</li><li><b>Communication via message passing:</b> no shared memory.</li><li><b>Resource sharing:</b> printer, database and other services.</li><li><b>No global clock:</b> only limited precision for processes to synchronize their clocks.</li></ul>
+<h3>Goals</h3>
+<p>Connecting users and resources, transparency, openness, scalability, enhanced availability.</p>
+<h3>Examples and application domains</h3>
+<p>Based on familiar networks: Internet, intranets, wireless networks. Examples: the Web (online bookshop), data centres and clouds, wide-area storage, banking, user-level communication (Facebook, WhatsApp, Skype). The Internet is a vast collection of networks of many types, with backbone and satellite links. An intranet is a portion of the Internet that is separately administered and supports internal sharing of resources (file servers, printers, email server), connected to the Internet through a router/firewall.</p>
+<div class="tw"><table><thead><tr><th>Domain</th><th>Examples</th></tr></thead><tbody>
+<tr><td>Finance and commerce</td><td>Amazon, eBay, PayPal, online banking, trading</td></tr>
+<tr><td>Information society</td><td>Web search, Wikipedia, Facebook, Twitter</td></tr>
+<tr><td>Creative industries</td><td>Online gaming, music/film, YouTube, Flickr</td></tr>
+<tr><td>Healthcare</td><td>Health informatics, online patient records, monitoring</td></tr>
+<tr><td>Education</td><td>E-learning, virtual environments, Coursera</td></tr>
+<tr><td>Transport and logistics</td><td>GPS, Google Maps, Google Earth</td></tr>
+<tr><td>Science and engineering</td><td>Cloud for collaboration (LHC, LIGO)</td></tr>
+<tr><td>Environmental management</td><td>Sensor networks for earthquakes, floods, tsunamis</td></tr></tbody></table></div>
+<h3>Challenges</h3>
+<div class="tw"><table><thead><tr><th>Challenge</th><th>Meaning</th></tr></thead><tbody>
+<tr><td>Heterogeneity</td><td>Components must interoperate across different operating systems, hardware, communication architectures, programming languages, software interfaces, security measures and information representation.</td></tr>
+<tr><td>Distribution transparency</td><td>Distribution is hidden from the user as much as possible.</td></tr>
+<tr><td>Fault tolerance</td><td>A partial failure must not cause failure of the whole system. <b>Failure:</b> a service no longer meets its specification (unavailable or too slow). <b>Fault:</b> the cause of a failure (a crashed component). <b>Fault tolerance:</b> no failure despite faults; failures are handled and hidden (e.g. a server cluster of 2 to n servers keeps running when one fails).</td></tr>
+<tr><td>Scalability</td><td>Works efficiently with more users; performance increases when resources are added.</td></tr>
+<tr><td>Concurrency</td><td>Shared access to resources: fair scheduling, preserve dependencies (distributed transactions, e.g. check funds before finalizing an order), avoid deadlocks.</td></tr>
+<tr><td>Openness</td><td>Interfaces are publicly available so new components can be added. An <b>open system</b> implements open specifications for interfaces, services and formats so software can be ported and can interoperate (POSIX, IEEE 1003.0). Standards bodies: ANSI, IETF, W3C, ISO, IEEE, OMG.</td></tr>
+<tr><td>Security</td><td>Resources are used only as intended (see below).</td></tr></tbody></table></div>
+<h3>Security</h3>
+<div class="tw"><table><thead><tr><th>Property</th><th>Meaning / example</th></tr></thead><tbody>
+<tr><td>Confidentiality</td><td>Protection against disclosure to unauthorized people. Example: access control lists (ACLs).</td></tr>
+<tr><td>Integrity</td><td>Protection against alteration or corruption. Example: changing the amount in a money order.</td></tr>
+<tr><td>Availability</td><td>Protection against interference with access. Example: DoS and DDoS attacks.</td></tr>
+<tr><td>Non-repudiation</td><td>Proof of sending / receiving information. Example: digital signature.</td></tr></tbody></table></div>
+<p><b>Mechanisms:</b> encryption (Blowfish, RSA; public key encrypts, private key decrypts), authentication (password, public-key authentication), authorization (access control lists).</p></article>
 
 <article class="topic" id="t3"><h2>3 · Computer architectures</h2>
 <h3>Levels of hardware parallelism</h3>
@@ -175,7 +217,8 @@ Numericals: practise formulas and examples on speedup, parallel networks, OpenMP
 <h3>GPU details</h3>
 <ul><li>A GPU has thousands of special-purpose processors, processes pixels of a 2D image in parallel, and follows the SIMD model.</li><li>NVIDIA GPUs have several <b>streaming multiprocessors (SMs)</b>. Each SM has its own control units and memory (registers, L1 cache, shared memory) and several scalar processor (SP) cores.</li><li><b>CUDA</b> = Compute Unified Device Architecture (NVIDIA).</li><li>GPU-accelerated computing = GPU + CPU for deep learning, analytics, engineering, video editing, medical imaging, AI, drones, robots, autonomous cars, IoT.</li></ul>
 <h3>Threads, hyper-threading, multithreading</h3>
-<ul><li>Process vs thread: both are independent sequences of execution. Threads of one process share memory; processes use separate memory.</li><li><b>Intel Hyper-Threading (HT):</b> one physical core appears as two logical cores. A dual-core with HT shows 4 logical cores. It adds no physical cores; it overlaps threads to raise throughput.</li><li><b>Multithreading:</b> software technique that runs multiple threads in a program; works with or without HT, on one or many cores. Improves responsiveness and performance.</li></ul></article>
+<ul><li>Process vs thread: both are independent sequences of execution. Threads of one process share memory; processes use separate memory.</li><li><b>Intel Hyper-Threading (HT):</b> one physical core appears as two logical cores. A dual-core with HT shows 4 logical cores. It adds no physical cores; it overlaps threads to raise throughput.</li><li><b>Multithreading:</b> software technique that runs multiple threads in a program; works with or without HT, on one or many cores. Improves responsiveness and performance.</li></ul><h3>GPU structure (Lecture 4 diagram)</h3>
+<p>A GPU has global memory, an L2 cache, an interface to the host, and a grid of <b>SMs</b> (streaming multiprocessors). Each SM contains many <b>SP</b> cores plus a warp scheduler and execution control, a register file, an L1 cache and shared memory.</p></article>
 
 <article class="topic" id="t4"><h2>4 · Data hazards <span class="tag">extra</span></h2>
 <p>A hazard stops the next instruction from running in its planned clock cycle in a pipeline. A <b>data hazard</b> happens when instructions depend on each other's data.</p>
@@ -359,7 +402,8 @@ if (rank == 0) printf("Total = %d\n", total);   // 360</code></pre>
 <div class="tw"><table><thead><tr><th>Topic</th><th>Formula</th></tr></thead><tbody>
 <tr><td>Speedup</td><td>S = T₁ / Tₚ</td></tr>
 <tr><td>Efficiency <span class="tag">extra</span></td><td>E = S / p</td></tr>
-<tr><td>Amdahl's law (Lecture 4)</td><td>S = 1 / (f + (1−f)/p), f = serial fraction; limit 1/f</td></tr>
+<tr><td>Amdahl's law (Lecture 4)</td><td>Speedup = 1 / ((1−P) + P/N); P = parallel fraction, N = processors, 1−P = serial part. Limit = 1/(1−P)</td></tr>
+<tr><td>FLOPS (Lecture 4)</td><td>sockets × cores/socket × cycles/second × FLOPs/cycle</td></tr>
 <tr><td>Wall vs CPU time</td><td>CPU time ≈ wall time × processors (1 h on 8 processors = 8 CPU-hours)</td></tr>
 <tr><td>Switch cost</td><td>∝ degree² (ports²)</td></tr>
 <tr><td>Perfect shuffle</td><td>j = 2i if i &lt; p/2, else 2i + 1 − p</td></tr>
@@ -375,7 +419,8 @@ if (rank == 0) printf("Total = %d\n", total);   // 360</code></pre>
 <article class="topic"><h2>Solved examples</h2>
 <h3>1. Parallel steps (Lecture 1)</h3><p>Y = (4×5)+(1×6)+(5×3). Serial: 4 steps. 3 processors: multiply together (1 step), add (1 step) = 2 steps.</p>
 <h3>2. Speedup and efficiency</h3><p>T₁ = 100 s, Tₚ = 30 s, p = 4. S = 100/30 = 3.33. E = 3.33/4 = 83%.</p>
-<h3>3. Amdahl</h3><p>f = 0.1, p = 4. S = 1/(0.1 + 0.9/4) = 1/0.325 = 3.08. Even with infinite processors S ≤ 1/0.1 = 10.</p>
+<h3>3. Amdahl (slide example)</h3><p>P = 0.80 parallel, 1−P = 0.20 serial, N = 4. Speedup = 1/(0.20 + 0.80/4) = 1/(0.20 + 0.20) = 1/0.40 = <b>2.5</b>. With infinite processors the limit is 1/0.20 = 5.</p>
+<h3>3b. FLOPS (slide test)</h3><p>Intel Core i7-970: 1 socket, 6 cores, 3.46 GHz = 3,460,000,000 cycles/s, 8 single-precision FLOPs per cycle (4 double-precision). Single precision = 1 × 6 × 3,460,000,000 × 8 = 166,080,000,000 FLOPS ≈ 166 GFLOPS. Double precision = 83,040,000,000 ≈ 83 GFLOPS. (The slide also prints 109 GFLOPS as its final line; confirm with your instructor which it expects.)</p>
 <h3>4. Pipeline</h3><p>5 stages, 100 instructions. Pipelined: 5 + 100 − 1 = 104 cycles. Unpipelined: 500 cycles. Speedup = 500/104 = 4.81.</p>
 <h3>5. Cache (Lecture 8)</h3><p>900 hits in 1000 accesses: hit ratio 0.90, miss ratio 0.10. Hit time 2 ns, miss penalty 50 ns: AMAT = 2 + 0.10×50 = 7 ns.</p>
 <h3>6. Networks, p = 8</h3><p>Crossbar: 64 switches. Omega: 3 stages, 4×3 = 12 switches. Completely connected: 8·7/2 = 28 links. Star: 7 links.</p>
@@ -392,7 +437,8 @@ if (rank == 0) printf("Total = %d\n", total);   // 360</code></pre>
 
 <article class="topic"><h2>Calculators</h2>
 <div class="calc">
-<div class="card"><h3>Speedup &amp; Amdahl</h3><label>T₁<input type="number" id="s_t1" value="100"></label><label>Tₚ<input type="number" id="s_tp" value="30"></label><label>p<input type="number" id="s_p" value="4"></label><label>Serial fraction f<input type="number" step="0.01" id="s_f" value="0.1"></label><div class="out" id="o_s"></div></div>
+<div class="card"><h3>Speedup &amp; Amdahl</h3><label>T₁<input type="number" id="s_t1" value="100"></label><label>Tₚ<input type="number" id="s_tp" value="30"></label><label>p<input type="number" id="s_p" value="4"></label><label>Parallel fraction P (Amdahl)<input type="number" step="0.01" id="s_f" value="0.8"></label><div class="out" id="o_s"></div></div>
+<div class="card"><h3>FLOPS</h3><label>Sockets<input type="number" id="f_s" value="1"></label><label>Cores per socket<input type="number" id="f_c" value="6"></label><label>Clock (GHz)<input type="number" step="0.01" id="f_g" value="3.46"></label><label>FLOPs per cycle<input type="number" id="f_f" value="8"></label><div class="out" id="o_f"></div></div>
 <div class="card"><h3>Cache AMAT</h3><label>Hits<input type="number" id="c_h" value="900"></label><label>Total accesses<input type="number" id="c_t" value="1000"></label><label>Hit time (ns)<input type="number" id="c_ht" value="2"></label><label>Miss penalty (ns)<input type="number" id="c_mp" value="50"></label><div class="out" id="o_c"></div></div>
 <div class="card"><h3>Network sizes</h3><label>Nodes p<input type="number" id="n_p" value="8"></label><div class="out" id="o_n"></div></div>
 <div class="card"><h3>Omega routing (p = 8)</h3><label>Source (0–7)<input type="number" id="r_s" value="2" min="0" max="7"></label><label>Destination (0–7)<input type="number" id="r_d" value="7" min="0" max="7"></label><div class="out" id="o_r"></div></div>
@@ -459,8 +505,9 @@ document.querySelectorAll('.fig').forEach(f=>{const fn=F[f.dataset.fig];if(fn)f.
 /* ---------- calculators ---------- */
 const nv=i=>parseFloat($(i).value)||0,r3=x=>Number.isFinite(x)?Math.round(x*1000)/1000:'n/a';
 function calc(){
-const t1=nv('s_t1'),tp=nv('s_tp'),p=nv('s_p'),f=nv('s_f'),S=t1/tp;
-$('o_s').textContent=`Speedup S = ${r3(S)}\nEfficiency E = ${r3(S/p*100)}%\nAmdahl S = ${r3(1/(f+(1-f)/p))}\nAmdahl limit = ${f?r3(1/f):'infinite'}`;
+const t1=nv('s_t1'),tp=nv('s_tp'),p=nv('s_p'),pf=nv('s_f'),S=t1/tp;
+$('o_s').textContent=`Speedup S = ${r3(S)}\nEfficiency E = ${r3(S/p*100)}%\nAmdahl S = ${r3(1/((1-pf)+pf/p))}\nAmdahl limit = ${pf<1?r3(1/(1-pf)):'infinite'}`;
+const fl=nv('f_s')*nv('f_c')*nv('f_g')*1e9*nv('f_f');$('o_f').textContent=`FLOPS = ${fl.toLocaleString('en-US')}\n= ${r3(fl/1e9)} GFLOPS`;
 const h=nv('c_h'),t=nv('c_t'),hr=t?h/t:0;
 $('o_c').textContent=`Hit ratio = ${r3(hr*100)}%\nMiss ratio = ${r3((1-hr)*100)}%\nAMAT = ${r3(nv('c_ht')+(1-hr)*nv('c_mp'))} ns`;
 const n=nv('n_p'),lg=Math.log2(n);
@@ -517,6 +564,19 @@ const cards=[
 ["Perfect shuffle rule","j = 2i if i < p/2, otherwise 2i + 1 - p."],
 ["Grid vs cloud","Grid: no specific owner, application oriented, special software splits tasks. Cloud: single owner, pay-use, service oriented, flexible (AWS, Gmail)."],
 ["MPI_Ssend","Synchronous send: completes only when the receiver has started receiving."],
+["Amdahl's law (slide form)","Speedup = 1 / ((1-P) + P/N). P = parallel fraction, N = processors. P = 0.8, N = 4 gives 2.5."],
+["FLOPS formula","sockets x cores per socket x cycles per second x FLOPs per cycle. i7-970: 1 x 6 x 3.46e9 x 8 = 166 GFLOPS (single precision)."],
+["Node, socket, core","Node: computer in a box. Socket: multi-core CPU package. Core: unique execution unit."],
+["Network vs distributed system","Network: visible, explicitly addressed (IP), focus on packets and routing. Distributed system: autonomous computers appear as one, focus on applications."],
+["Characteristics of a distributed system","Parallel activities, message passing (no shared memory), resource sharing, no global clock."],
+["Goals of distributed systems","Connecting users and resources, transparency, openness, scalability, enhanced availability."],
+["Challenges of distributed systems","Heterogeneity, distribution transparency, fault tolerance, scalability, concurrency, openness, security."],
+["Failure vs fault","Failure: service no longer meets its specification. Fault: the cause (e.g. a crashed component). Fault tolerance: no failure despite faults."],
+["Four security properties","Confidentiality (ACLs), integrity, availability (DoS/DDoS), non-repudiation (digital signature)."],
+["Security mechanisms","Encryption (RSA, Blowfish), authentication (password, public key), authorization (ACLs)."],
+["Open system","Implements open specifications for interfaces, services and formats so software ports and interoperates (POSIX)."],
+["Concurrency requirements","Fair scheduling, preserve dependencies (distributed transactions), avoid deadlocks."],
+["GPU structure","Global memory, L2 cache, many SMs; each SM has SP cores, warp scheduler, register file, L1 cache, shared memory."],
 ["Store buffer","Lets a core continue before its write is visible; allows reordering, so (0,0) is possible on real hardware such as x86."],
 ["OpenMP vs MPI","OpenMP: threads, shared memory, directives. MPI: processes, distributed memory, messages."]
 ];
@@ -525,7 +585,14 @@ function drawF(){const c=deck[fi];$('fq').innerHTML=`<p>Question</p><h2>${c[0]}<
 function flipF(){flip=!flip;drawF()}
 $('flash').onclick=flipF;$('fflip').onclick=flipF;$('fprev').onclick=()=>{fi=(fi-1+deck.length)%deck.length;flip=false;drawF()};$('fnext').onclick=()=>{fi=(fi+1)%deck.length;flip=false;drawF()};$('fshuf').onclick=()=>{deck.sort(()=>Math.random()-.5);fi=0;flip=false;drawF()};drawF();
 const quiz=[
-{q:"In UMA/SMP systems, memory access time is:",o:["Different per processor","Equal for all processors","Unbounded","Only for GPUs"],a:1,e:"UMA = Uniform Memory Access."},
+{q:"Amdahl: P = 0.8 parallel, N = 4. Speedup?",o:["3.2","2.5","4","1.25"],a:1,e:"1/((0.2) + 0.8/4) = 1/0.4 = 2.5."},
+{q:"FLOPS of 1 socket, 6 cores, 3.46 GHz, 8 FLOPs/cycle:",o:["83 GFLOPS","166 GFLOPS","27.7 GFLOPS","20 GFLOPS"],a:1,e:"1 x 6 x 3.46e9 x 8 = 166.08e9."},
+{q:"Which is NOT a characteristic of distributed systems?",o:["No global clock","Message passing","Shared memory between computers","Resource sharing"],a:2,e:"They communicate by messages; no shared memory."},
+{q:"Which security property does a digital signature give?",o:["Confidentiality","Availability","Non-repudiation","Heterogeneity"],a:2,e:"Proof of sending or receiving."},
+{q:"A DDoS attack mainly breaks:",o:["Integrity","Availability","Confidentiality","Openness"],a:1,e:"It interferes with access to resources."},
+{q:"A crashed component is a:",o:["Failure","Fault","Transparency","Deadlock"],a:1,e:"Fault is the cause; failure is the service no longer meeting its spec."},
+{q:"Network vs distributed system: which has explicitly addressed (IP) entities?",o:["Network","Distributed system","Both are transparent","Neither"],a:0,e:"In a DS the autonomous computers are transparent."},
+{q:"In UMA/SMP systems', memory access time is:",o:["Different per processor","Equal for all processors","Unbounded","Only for GPUs"],a:1,e:"UMA = Uniform Memory Access."},
 {q:"A program takes 1 hour on 8 processors. CPU time used is about:",o:["1 hour","8 hours","1/8 hour","64 hours"],a:1,e:"Wall time falls but total CPU time rises."},
 {q:"A dual-core CPU with Hyper-Threading appears to the OS as:",o:["2 cores","4 logical cores","8 cores","1 core"],a:1,e:"Each physical core appears as two logical cores."},
 {q:"Which is NOT an OpenMP API component?",o:["Compiler directives","Runtime library routines","Environment variables","MPI_Send"],a:3,e:"MPI_Send belongs to MPI."},

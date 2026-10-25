@@ -14,8 +14,8 @@ Open `index.html` in any modern browser.
 | --- | --- |
 | Home | Exam focus and a short study plan. |
 | 1 Â· Theory | Parallel vs distributed computing, distributed systems, architectures (ILP, DLP, Flynn, CPU/GPU), data hazards, memory and cache coherence (MESI), interconnection networks, OpenMP, MPI. Includes 13 diagrams. |
-| 2 Â· Numericals | Formula sheet, 10 solved examples and 6 calculators (speedup and Amdahl, cache AMAT, network sizes, Omega routing, pipeline cycles, OpenMP/MPI loop split). |
-| 3 Â· Practice | 43 flashcards and a 33-question quiz that lists the questions you missed. |
+| 2 Â· Numericals | Formula sheet, 10 solved examples and 7 calculators (including FLOPS) (speedup and Amdahl, cache AMAT, network sizes, Omega routing, pipeline cycles, OpenMP/MPI loop split). |
+| 3 Â· Practice | 56 flashcards and a 40-question quiz that lists the questions you missed. |
 
 ## Tips
 
