@@ -81,7 +81,7 @@ svg line,svg path{stroke:var(--ink);stroke-width:1.3;fill:none}svg line.t{stroke
 <div class="box"><b>What to prepare</b>
 Theory: basic concepts of parallel and distributed computing, computer architectures, cache coherence, data hazards and parallel programming. Know definitions, differences, main concepts and class examples.<br><br>
 Numericals: practise formulas and examples on speedup, parallel networks, OpenMP and MPI from the slides.</div>
-<p class="cap">Topics marked <span class="tag">extra</span> are standard exam topics that are not in the uploaded slides (data hazards, speedup laws). Check them against your class notes.</p>
+<p class="cap">Topics marked <span class="tag">extra</span> are standard exam topics that are not in the uploaded slides (data hazards, efficiency, pipeline cycle count). Check them against your class notes.</p>
 </section>
 
 <!-- THEORY -->
@@ -111,7 +111,18 @@ Numericals: practise formulas and examples on speedup, parallel networks, OpenMP
 <div class="fig" data-fig="mem" data-cap="Left: threads share one address space (OpenMP). Right: each process has private memory and sends messages (MPI)."></div>
 <h3>Von Neumann architecture</h3>
 <p>Input, output, control unit, ALU, memory and external storage. The CPU uses instructions and data to perform operations.</p>
-</article>
+<h3>Concurrency vs parallelism</h3>
+<ul><li><b>Concurrency:</b> tasks start, run and finish in overlapping time periods. They need not run at the same instant (multitasking on a single core).</li><li><b>Parallelism:</b> tasks literally run at the same time (multicore).</li></ul>
+<h3>Why distribute? Distributed data</h3>
+<ul><li>Data is collected and stored at different locations; moving it to one place is expensive.</li><li>Many tasks are inherently parallel.</li><li>Privacy issues in data mining and large commercial databases.</li><li>Example: Google used about 4,000 PC servers, one of the largest clusters.</li></ul>
+<h3>Challenges in parallelism</h3>
+<div class="tw"><table><thead><tr><th>Challenge</th><th>Detail</th></tr></thead><tbody>
+<tr><td>Complexity</td><td>Multiple instruction streams plus data flowing between them. Costs programmer time in design, coding, debugging, tuning and maintenance.</td></tr>
+<tr><td>Portability</td><td>Standards (MPI, OpenMP, POSIX threads) help, but implementations, operating systems and hardware differ. Vendor extensions hurt portability.</td></tr>
+<tr><td>Resource requirements</td><td>Wall-clock time falls but CPU time rises: 1 hour on 8 processors = 8 CPU-hours. Memory use can be higher (replicated data, library overhead).</td></tr>
+<tr><td>Overhead</td><td>For short programs, setup, task creation, communication and termination can make parallel code slower than serial.</td></tr></tbody></table></div>
+<h3>Performance: FLOPS and Amdahl</h3>
+<p><b>FLOPS</b> (floating-point operations per second) measures computing power (theoretical peak). Example from class: IBM Summit, USA, 4,611,236 cores (9,216 POWER9 CPUs + 27,648 NVIDIA V100 GPUs), 122.3 PFLOPS. <b>Amdahl's law</b> gives the maximum speedup when only part of a program is parallelized (see Numericals).</p></article>
 
 <article class="topic" id="t2"><h2>2 · Distributed systems</h2>
 <p>A distributed system is a set of independent computers that coordinate through message passing. The user sees one system or service.</p>
@@ -123,7 +134,9 @@ Numericals: practise formulas and examples on speedup, parallel networks, OpenMP
 <tr><td>Location</td><td>One site, local network</td><td>Many sites</td><td>Provider data centres</td></tr>
 <tr><td>Hardware</td><td>Similar</td><td>Different</td><td>Hidden from user</td></tr>
 <tr><td>Coupling</td><td>Tight</td><td>Loose</td><td>Service based, pay for use</td></tr>
-<tr><td>Example</td><td>Lab / HPC cluster</td><td>Shared research resources</td><td>AWS, Google Cloud</td></tr></tbody></table></div>
+<tr><td>Owner</td><td>One organisation</td><td>No specific owner</td><td>Single owner (provider)</td></tr>
+<tr><td>Orientation</td><td>-</td><td>Application oriented, less flexible, collaborative</td><td>Service oriented, flexible, highly accessible</td></tr>
+<tr><td>Example</td><td>Lab / HPC cluster</td><td>Online gaming; special software assigns subtasks</td><td>AWS, Google App Engine, Dropbox, Gmail, YouTube</td></tr></tbody></table></div>
 <h3>Characteristics and challenges</h3>
 <ul><li>Concurrency, message passing, resource sharing, no global clock, independent components.</li><li>Challenges: communication delay, coordination, failures, resource management.</li></ul>
 </article>
@@ -151,7 +164,18 @@ Numericals: practise formulas and examples on speedup, parallel networks, OpenMP
 <p>GPU programming: <b>CUDA</b> (NVIDIA) and <b>OpenCL</b> (portable). Uses: image processing, machine learning, video.</p>
 <h3>Process, thread, hybrid</h3>
 <ul><li><b>Process:</b> a running program with its own resources. <b>Thread:</b> an execution path inside a process; threads share memory.</li><li><b>Hybrid:</b> MPI between computers + OpenMP threads inside each computer.</li></ul>
-</article>
+<h3>Parallel computer memory architectures</h3>
+<div class="tw"><table><thead><tr><th>Type</th><th>Key points</th></tr></thead><tbody>
+<tr><td>UMA (Uniform Memory Access)</td><td>Usually SMP (symmetric multiprocessor). Identical processors, equal access and equal access time to memory. CC-UMA = cache coherent: if one processor updates a location, all others know (done in hardware).</td></tr>
+<tr><td>NUMA (Non-Uniform)</td><td>Made by linking two or more SMPs. One SMP can access another's memory, but access across the link is slower. CC-NUMA if cache coherent.</td></tr>
+<tr><td>Distributed memory</td><td>Each processor has local memory; needs a network. No global address space, so no cache coherency concept. Programmer defines how and when data is communicated and synchronized.</td></tr>
+<tr><td>Hybrid distributed-shared</td><td>Largest computers use both: shared-memory nodes (or GPUs) networked together. Network communication moves data between machines.</td></tr></tbody></table></div>
+<h3>Parallel programming models</h3>
+<ul><li><b>Shared memory:</b> Pthreads, C++ threads, OpenMP (comparatively better).</li><li><b>Distributed memory:</b> MPI (MPI_Init, MPI_Send, MPI_Recv, MPI_Finalize), PGAS (Partitioned Global Address Space).</li><li><b>Accelerator / hybrid:</b> part of the program on CPU, the rest on GPU (CUDA, OpenCL).</li></ul>
+<h3>GPU details</h3>
+<ul><li>A GPU has thousands of special-purpose processors, processes pixels of a 2D image in parallel, and follows the SIMD model.</li><li>NVIDIA GPUs have several <b>streaming multiprocessors (SMs)</b>. Each SM has its own control units and memory (registers, L1 cache, shared memory) and several scalar processor (SP) cores.</li><li><b>CUDA</b> = Compute Unified Device Architecture (NVIDIA).</li><li>GPU-accelerated computing = GPU + CPU for deep learning, analytics, engineering, video editing, medical imaging, AI, drones, robots, autonomous cars, IoT.</li></ul>
+<h3>Threads, hyper-threading, multithreading</h3>
+<ul><li>Process vs thread: both are independent sequences of execution. Threads of one process share memory; processes use separate memory.</li><li><b>Intel Hyper-Threading (HT):</b> one physical core appears as two logical cores. A dual-core with HT shows 4 logical cores. It adds no physical cores; it overlaps threads to raise throughput.</li><li><b>Multithreading:</b> software technique that runs multiple threads in a program; works with or without HT, on one or many cores. Improves responsiveness and performance.</li></ul></article>
 
 <article class="topic" id="t4"><h2>4 · Data hazards <span class="tag">extra</span></h2>
 <p>A hazard stops the next instruction from running in its planned clock cycle in a pipeline. A <b>data hazard</b> happens when instructions depend on each other's data.</p>
@@ -191,7 +215,23 @@ Numericals: practise formulas and examples on speedup, parallel networks, OpenMP
 <div class="box"><b>Class example</b>Initially x=0, y=0. T0: x=1; print(y). T1: y=1; print(x). Can both print 0? Under sequential consistency, no: that needs x=1 before print(y), print(y) before y=1, y=1 before print(x), print(x) before x=1. This is a cycle, so it is impossible. Weaker hardware can allow it.</div>
 <h3>Synchronization and false sharing</h3>
 <ul><li><b>Race condition:</b> result depends on thread timing (a shared counter: read, add, write).</li><li>Tools: mutex/lock, atomic, semaphore, barrier, memory fence.</li><li><b>False sharing:</b> different threads update different variables in the same cache line, so the line keeps bouncing. Fix: padding, per-thread data.</li></ul>
-</article>
+<h3>Why a hierarchy, and the shared counter race</h3>
+<p>One memory technology cannot be fast, large and cheap at once. In a multicore chip, cores have private L1/L2 caches, a shared L3 and shared RAM.</p>
+<div class="tw"><table><thead><tr><th>Time</th><th>Thread A</th><th>Thread B</th><th>Counter</th></tr></thead><tbody>
+<tr><td>t1</td><td>read → 0</td><td></td><td>0</td></tr><tr><td>t2</td><td></td><td>read → 0</td><td>0</td></tr>
+<tr><td>t3</td><td>add → 1</td><td></td><td>0</td></tr><tr><td>t4</td><td></td><td>add → 1</td><td>0</td></tr>
+<tr><td>t5</td><td>write 1</td><td></td><td>1</td></tr><tr><td>t6</td><td></td><td>write 1</td><td>1</td></tr></tbody></table></div>
+<p><code>counter = counter + 1</code> is three steps (read, add, write). Final value 1, expected 2. Coherence does not make this atomic.</p>
+<pre><code>#pragma omp parallel for
+for (int i = 0; i &lt; 10000; i++) {
+    #pragma omp atomic update
+    counter++;
+}   // Final counter = 10000</code></pre>
+<h3>Memory reordering</h3>
+<ul><li>Compilers and processors may reorder memory operations to go faster, as far as the memory model allows.</li><li><b>Store buffers</b> let a core continue before its write is visible. <b>Out-of-order execution</b> runs independent instructions early.</li><li>With a store buffer, both threads in the x/y example can print 0 on real hardware such as x86.</li><li>Coherence is not synchronization. A sleep or an ordinary print is not reliable synchronization. Use locks, atomics, barriers, fences.</li></ul>
+<h3>Improving memory performance</h3>
+<ol><li>Access arrays sequentially.</li><li>Reuse data while it is in cache.</li><li>Organize data for spatial locality.</li><li>Reduce unnecessary transfers.</li><li>Avoid false sharing.</li><li>Synchronize only where required.</li><li>Measure before and after.</li></ol>
+<div class="box"><b>Class question</b>Hit time 2 ns, miss ratio 5%, miss penalty 60 ns. AMAT = 2 + 0.05 × 60 = 5 ns.</div></article>
 
 <article class="topic" id="t6"><h2>6 · Interconnection networks</h2>
 <p>An interconnection network carries data between processors and memory. It is made of <b>links</b> (wires, fibre), <b>switches</b> and <b>network interfaces</b>.</p>
@@ -216,7 +256,22 @@ Numericals: practise formulas and examples on speedup, parallel networks, OpenMP
 <tr><td>Omega</td><td>Dynamic</td><td>O(p log p)</td><td>Blocking</td></tr>
 <tr><td>Completely connected</td><td>Static</td><td>p(p−1)/2 links</td><td>Too many links</td></tr>
 <tr><td>Star</td><td>Static</td><td>p−1 links</td><td>Central bottleneck, single point of failure</td></tr></tbody></table></div>
-</article>
+<h3>Why a network, and network sizes</h3>
+<ul><li>Software wants dedicated channels between every processor and memory; hardware cannot afford the chip area and power. A network shares wires smartly.</li><li>Direct wires between all pairs: 8 cores need 28 wires, 100 cores need 4,950.</li><li>Design goal: move more data, in less time, within cost, power and area limits. A slow network becomes the bottleneck.</li></ul>
+<div class="tw"><table><thead><tr><th>Domain</th><th>Devices</th><th>Distance</th><th>Example</th></tr></thead><tbody>
+<tr><td>On-chip (NoC)</td><td>Dozens to hundreds</td><td>Millimetres</td><td>Intel 80-core chip, 48-core SCC</td></tr>
+<tr><td>System (SAN)</td><td>Hundreds to thousands</td><td>Tens to hundreds of metres</td><td>IBM Blue Gene/L (64K nodes)</td></tr>
+<tr><td>Local (LAN)</td><td>Hundreds</td><td>Few km to tens of km</td><td>Ethernet</td></tr>
+<tr><td>Wide (WAN)</td><td>Millions</td><td>Thousands of km</td><td>Internet, ATM</td></tr></tbody></table></div>
+<p>This course focuses on networks inside parallel computers (NoC and SAN).</p>
+<h3>Switches and network interface</h3>
+<ul><li>A switch maps a fixed number of inputs to outputs. <b>Degree</b> = total ports. Cost grows as the square of the degree (4-port ≈ 16 units, 8-port ≈ 64). Peripheral hardware grows linearly with degree; packaging cost grows with pins.</li><li>The <b>network interface</b> connects a processor to the network, on the I/O bus or the memory bus. Memory bus = faster, tightly coupled multicomputer. I/O bus = slower, cluster.</li><li>Commercial machines often mix topologies for packaging, cost and available parts.</li></ul>
+<h3>Bus with caches, and examples</h3>
+<ul><li>A bus with local memory/cache needs fewer bus trips and performs much better than one with no caches.</li><li>Real machines: bus (Sun Enterprise, Pentium shared-bus servers); crossbar (Sun Ultra HPC 10000, Fujitsu VPP500).</li><li>Bus has excellent cost scaling but poor performance scaling. Crossbar is the opposite. Multistage (Omega) is the compromise.</li></ul>
+<h3>Perfect shuffle</h3>
+<p>Rule: output j = 2i if i &lt; p/2, otherwise j = 2i + 1 − p.</p>
+<div class="tw"><table><thead><tr><th>Input i</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr></thead><tbody><tr><td>Output j</td><td>0</td><td>2</td><td>4</td><td>6</td><td>1</td><td>3</td><td>5</td><td>7</td></tr></tbody></table></div>
+<p>Pairs to remember: <b>Bus ~ Star</b> (cheap, bottleneck). <b>Crossbar ~ Completely connected</b> (fast, costly). Class question: route 011 → 100: 0/1 cross, 1/0 cross, 1/0 cross.</p></article>
 
 <article class="topic" id="t7"><h2>7 · OpenMP (shared memory)</h2>
 <p>OpenMP is an API for shared-memory parallel programming in C, C++ and Fortran. It uses compiler directives and threads.</p>
@@ -239,7 +294,22 @@ int main() {
 // compile: gcc -fopenmp sum.c -o sum   run: ./sum</code></pre>
 <div class="box"><b>Race condition</b>Two threads read the same old value of a shared counter and both write back. One update is lost. Fix: reduction, atomic, critical or lock.</div>
 <p>The class lab uses Google Colab: first parallel program, thread IDs, parallel sum.</p>
-</article>
+<h3>OpenMP in more detail</h3>
+<ul><li><b>Three API components:</b> compiler directives, runtime library routines, environment variables (e.g. <code>OMP_NUM_THREADS</code>).</li><li>History: ANSI X3H5 draft 1994; OpenMP specification started 1997; C and Fortran specs released together since 2005.</li><li>Designed for multi-processor/core shared-memory machines (UMA or NUMA).</li><li><b>Thread-based:</b> parallelism only through threads. A thread is the smallest unit the OS can schedule and exists only inside a process. Usually threads = cores.</li><li><b>Explicit</b> (not automatic) parallelism: the programmer has full control.</li><li><b>SPMD:</b> all threads can run the same code but access different data and take different paths.</li><li><b>Nested parallelism</b> and <b>dynamic threads</b> exist but implementations may not support them.</li><li>OpenMP says nothing about parallel I/O. The programmer must handle it.</li></ul>
+<div class="box"><b>What a thread-based model needs</b>Start threads, discover how many are running, identify each thread, join threads, synchronize, keep a consistent view of data, and check for dependencies, data conflicts, race conditions and deadlocks.</div>
+<h3>Class lab (Google Colab)</h3>
+<pre><code>// hello.cpp
+#pragma omp parallel
+{ std::cout &lt;&lt; "Hello from OpenMP!" &lt;&lt; std::endl; }
+// prints 4 times: every thread runs the block
+
+// threads.cpp
+#pragma omp parallel
+{ int id = omp_get_thread_num(); std::cout &lt;&lt; "Thread number: " &lt;&lt; id; }
+
+!g++ -fopenmp threads.cpp -o threads
+!OMP_NUM_THREADS=4 ./threads</code></pre>
+<ul><li>Output order is not guaranteed. <code>OMP_NUM_THREADS=2</code> prints 2 lines, 8 prints 8, 1 is serial.</li><li>Array sum: <code>a[4]={10,20,30,40}</code> with <code>parallel for reduction(+:sum)</code> gives <b>100</b>. Reduction gives each thread a private copy and adds them at the end; without it threads writing the same sum corrupt the result.</li></ul></article>
 
 <article class="topic" id="t8"><h2>8 · MPI (message passing)</h2>
 <p>MPI (Message Passing Interface) is a standard for communication between parallel processes. Each process has private memory and exchanges data by messages. It runs on one computer or many.</p>
@@ -268,7 +338,17 @@ MPI_Finalize();
 <div class="tw"><table><thead><tr><th>OpenMP</th><th>MPI</th></tr></thead><tbody>
 <tr><td>Threads</td><td>Processes</td></tr><tr><td>Shared memory</td><td>Distributed memory</td></tr>
 <tr><td>Directives (<code>#pragma omp</code>)</td><td>Function calls (<code>MPI_Send</code>)</td></tr><tr><td>Usually one computer</td><td>One or many computers</td></tr></tbody></table></div>
-</article>
+<h3>More MPI from the slides</h3>
+<ul><li><b>Message passing idea:</b> a process cannot read another's memory (Ali's notebook, Sara's notebook). Communication is explicit, unlike OpenMP where it is implicit.</li><li>MPI is an interface/standard, not a language (C, C++, Fortran). Implementations: <b>MPICH</b>, <b>Open MPI</b> (used in course), Intel MPI. A correct program runs on any.</li><li><b>Program structure:</b> MPI_Init, get size, get rank, compute, communicate, MPI_Finalize. Ranks run 0 to size−1.</li><li>Compile <code>mpicc hello.c -o hello</code>; run <code>mpirun -np 4 ./hello</code> (or <code>mpiexec</code>). Same executable, four processes, four ranks. This SPMD style is a form of MIMD.</li><li>Typical use: weather forecasting. Each process computes a region, neighbours exchange boundary data each time step.</li><li><b>Reduce operations:</b> MPI_SUM, MPI_MAX, MPI_MIN, MPI_PROD. The <b>root</b> (usually rank 0) receives the result. <code>MPI_Ssend</code> is synchronous: it finishes only when the receiver has started receiving.</li><li><code>MPI_Bcast(&amp;value, 1, MPI_INT, 0, MPI_COMM_WORLD)</code>: root 0 sends to all.</li></ul>
+<pre><code>int A[8] = {10,20,30,40,50,60,70,80};
+int part[2], local, total;
+MPI_Scatter(A, 2, MPI_INT, part, 2, MPI_INT, 0, MPI_COMM_WORLD);
+local = part[0] + part[1];
+MPI_Reduce(&amp;local, &amp;total, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+if (rank == 0) printf("Total = %d\n", total);   // 360</code></pre>
+<p><b>Deadlock fix:</b> swap the order on one side: P0 sends then receives; P1 receives then sends.</p>
+<h3>Lecture 6 review answers</h3>
+<ul><li>Can process 1 read process 0's variable directly? No, 0 must send it.</li><li><code>mpirun -np 6</code>: ranks 0–5, size 6.</li><li>Highest mark across processes: <code>MPI_Reduce</code> with <code>MPI_MAX</code>.</li><li>Cluster of 10 machines: MPI between machines, OpenMP inside each.</li><li>Lab tasks: ring (token 0→1→2→…→0), sum 1..1000 with Reduce, maximum mark, explain and fix the Recv-first deadlock.</li></ul></article>
 </section>
 
 <!-- NUMERICALS -->
@@ -277,9 +357,12 @@ MPI_Finalize();
 <p class="lead">Learn the formulas, read the solved examples, then check your own answers with the calculators.</p>
 <article class="topic"><h2>Formula sheet</h2>
 <div class="tw"><table><thead><tr><th>Topic</th><th>Formula</th></tr></thead><tbody>
-<tr><td>Speedup <span class="tag">extra</span></td><td>S = T₁ / Tₚ</td></tr>
+<tr><td>Speedup</td><td>S = T₁ / Tₚ</td></tr>
 <tr><td>Efficiency <span class="tag">extra</span></td><td>E = S / p</td></tr>
-<tr><td>Amdahl's law <span class="tag">extra</span></td><td>S = 1 / (f + (1−f)/p), f = serial fraction; limit 1/f</td></tr>
+<tr><td>Amdahl's law (Lecture 4)</td><td>S = 1 / (f + (1−f)/p), f = serial fraction; limit 1/f</td></tr>
+<tr><td>Wall vs CPU time</td><td>CPU time ≈ wall time × processors (1 h on 8 processors = 8 CPU-hours)</td></tr>
+<tr><td>Switch cost</td><td>∝ degree² (ports²)</td></tr>
+<tr><td>Perfect shuffle</td><td>j = 2i if i &lt; p/2, else 2i + 1 − p</td></tr>
 <tr><td>Pipeline time <span class="tag">extra</span></td><td>k stages, n instructions: k + n − 1 cycles (unpipelined: n·k)</td></tr>
 <tr><td>Hit / miss ratio</td><td>hits / total; 1 − hit ratio</td></tr>
 <tr><td>AMAT</td><td>hit time + miss ratio × miss penalty</td></tr>
@@ -299,6 +382,11 @@ MPI_Finalize();
 <h3>7. Omega routing 010 → 111</h3><p>Bit 1: 0≠1 cross. Bit 2: 1=1 pass. Bit 3: 0≠1 cross.</p>
 <h3>8. OpenMP sum 1..100, 4 threads (static)</h3><p>25 iterations each. T0 (1–25) = 325, T1 (26–50) = 950, T2 (51–75) = 1575, T3 (76–100) = 2200. Reduction: 325+950+1575+2200 = 5050.</p>
 <h3>9. MPI sum of 8 numbers, 4 processes</h3><p>Scatter 2 each: (10,20), (30,40), (50,60), (70,80). Partial sums 30, 70, 110, 150. MPI_Reduce with MPI_SUM: 360 at rank 0.</p>
+<h3>9b. MPI Reduce (Lecture 6)</h3><p>Ranks hold 10, 20, 30, 40. MPI_Reduce with MPI_SUM: 100 at rank 0. Array sum in OpenMP lab, a = {10,20,30,40}: total = 100.</p>
+<h3>9c. AMAT (Lecture 8 review)</h3><p>Hit time 2 ns, miss ratio 5%, miss penalty 60 ns. AMAT = 2 + 0.05 × 60 = 5 ns.</p>
+<h3>9d. Wires and switch cost (Lecture 5)</h3><p>Direct wires: 8 cores need 8·7/2 = 28; 100 cores need 100·99/2 = 4,950. Switch cost ∝ degree²: 4-port ≈ 16, 8-port ≈ 64. Crossbar for 8 inputs: 64 crosspoints vs Omega: 12 switches.</p>
+<h3>9e. Omega routing 011 → 100</h3><p>0/1 cross, 1/0 cross, 1/0 cross.</p>
+<h3>9f. CPU time (Lecture 4)</h3><p>A parallel program that runs 1 hour on 8 processors uses 8 CPU-hours of CPU time.</p>
 <h3>10. MPI sum 1..1,000,000, 4 ranks (Lecture 7)</h3><p>Rank 0: 1–250,000 = 31,250,125,000. Rank 1: 250,001–500,000 = 93,750,125,000. Rank 2: 500,001–750,000 = 156,250,125,000. Rank 3: 750,001–1,000,000 = 218,750,125,000. Total = 500,000,500,000.</p>
 </article>
 
@@ -417,6 +505,19 @@ const cards=[
 ["Scatter, Gather, Bcast, Reduce","Scatter: split parts. Gather: collect. Bcast: same to all. Reduce: combine with an operation."],
 ["Blocking vs non-blocking","Blocking waits until safe to continue. Non-blocking (Isend/Irecv + Wait) returns at once."],
 ["Deadlock","Processes wait forever, e.g. both call MPI_Recv first. Reorder send and receive."],
+["UMA vs NUMA","UMA/SMP: identical processors, equal memory access time (CC-UMA is cache coherent). NUMA: linked SMPs, remote memory access is slower."],
+["Concurrency vs parallelism","Concurrency: tasks overlap in time, not necessarily simultaneous. Parallelism: tasks run at the same instant on multiple cores."],
+["Intel Hyper-Threading","One physical core appears as two logical cores. Adds no cores; overlaps threads to raise throughput."],
+["Three OpenMP API components","Compiler directives, runtime library routines, environment variables."],
+["What is SPMD?","Single Program Multiple Data: all threads/processes run the same code but on different data and paths."],
+["Challenges in parallel programming","Complexity, portability, resource requirements (more CPU time, more memory), overhead for short programs."],
+["Why a network and not direct wires?","Direct wires cost too much area and power (8 cores = 28 wires, 100 = 4,950). A network shares wires."],
+["Switch degree and cost","Degree = number of ports. Cost grows with the square of the degree."],
+["Network domains","NoC (on-chip), SAN (supercomputers), LAN (building/campus), WAN (global, Internet)."],
+["Perfect shuffle rule","j = 2i if i < p/2, otherwise 2i + 1 - p."],
+["Grid vs cloud","Grid: no specific owner, application oriented, special software splits tasks. Cloud: single owner, pay-use, service oriented, flexible (AWS, Gmail)."],
+["MPI_Ssend","Synchronous send: completes only when the receiver has started receiving."],
+["Store buffer","Lets a core continue before its write is visible; allows reordering, so (0,0) is possible on real hardware such as x86."],
 ["OpenMP vs MPI","OpenMP: threads, shared memory, directives. MPI: processes, distributed memory, messages."]
 ];
 let deck=cards.slice(),fi=0,flip=false;
@@ -424,6 +525,17 @@ function drawF(){const c=deck[fi];$('fq').innerHTML=`<p>Question</p><h2>${c[0]}<
 function flipF(){flip=!flip;drawF()}
 $('flash').onclick=flipF;$('fflip').onclick=flipF;$('fprev').onclick=()=>{fi=(fi-1+deck.length)%deck.length;flip=false;drawF()};$('fnext').onclick=()=>{fi=(fi+1)%deck.length;flip=false;drawF()};$('fshuf').onclick=()=>{deck.sort(()=>Math.random()-.5);fi=0;flip=false;drawF()};drawF();
 const quiz=[
+{q:"In UMA/SMP systems, memory access time is:",o:["Different per processor","Equal for all processors","Unbounded","Only for GPUs"],a:1,e:"UMA = Uniform Memory Access."},
+{q:"A program takes 1 hour on 8 processors. CPU time used is about:",o:["1 hour","8 hours","1/8 hour","64 hours"],a:1,e:"Wall time falls but total CPU time rises."},
+{q:"A dual-core CPU with Hyper-Threading appears to the OS as:",o:["2 cores","4 logical cores","8 cores","1 core"],a:1,e:"Each physical core appears as two logical cores."},
+{q:"Which is NOT an OpenMP API component?",o:["Compiler directives","Runtime library routines","Environment variables","MPI_Send"],a:3,e:"MPI_Send belongs to MPI."},
+{q:"Direct wires between all pairs of 100 cores:",o:["100","1,000","4,950","9,900"],a:2,e:"100 x 99 / 2 = 4,950."},
+{q:"Perfect shuffle for p = 8: input 5 goes to output:",o:["2","3","5","6"],a:1,e:"i >= p/2, so j = 2i + 1 - p = 11 - 8 = 3."},
+{q:"Omega routing 011 to 100 settings?",o:["pass, pass, pass","cross, cross, cross","cross, pass, cross","pass, cross, pass"],a:1,e:"All three bit pairs differ."},
+{q:"Hit time 2 ns, miss ratio 5%, miss penalty 60 ns. AMAT?",o:["3 ns","5 ns","62 ns","7 ns"],a:1,e:"2 + 0.05 x 60 = 5 ns."},
+{q:"Which is owned by a single owner and is service oriented?",o:["Grid","Cluster","Cloud","Bus"],a:2,e:"Cloud: pay-use, flexible; grid has no specific owner."},
+{q:"MPI_Reduce with MPI_MAX on marks held by each process gives:",o:["Sum of marks","Highest mark at the root","Each mark to all","Nothing"],a:1,e:"MAX finds the top value."},
+{q:"With a store buffer, both threads in the x/y example can print:",o:["Only 1 1","0 0 is possible","Neither prints","Only 0 1"],a:1,e:"Reordering allows (0,0) on real hardware; sequential consistency forbids it."},
 {q:"Which model uses threads that share an address space?",o:["MPI","OpenMP","Grid","Crossbar"],a:1,e:"OpenMP is shared memory."},
 {q:"SIMD stands for:",o:["Single Instruction, Multiple Data","Shared Instruction, Multiple Data","Single Input, Multiple Devices","Serial Instruction, Mixed Data"],a:0,e:"One instruction stream, many data streams."},
 {q:"A GPU is best described as:",o:["SISD","SIMD","MISD","Distributed"],a:1,e:"Same shader instruction on thousands of pixels."},
